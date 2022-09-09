@@ -1,4 +1,5 @@
 import { CliCommandInterface } from '../cli-command/cli-command.interface.js';
+import { CommandNames } from '../cli-command/command-names.enum.js';
 
 type ParsedCommand = {
   [key: string]: string[]
@@ -6,7 +7,7 @@ type ParsedCommand = {
 
 export default class CLIApplication {
   private static readonly COMMAND_PREFIX = '--';
-  private static readonly DEFAULT_COMMAND = '--help'; 
+  private static readonly DEFAULT_COMMAND = CommandNames.help;
 
   private commands: {[propertyName: string]: CliCommandInterface} = {};
 
@@ -29,14 +30,14 @@ export default class CLIApplication {
   private getCommand(commandName: string): CliCommandInterface {
     return this.commands[commandName] ?? this.commands[CLIApplication.DEFAULT_COMMAND];
   }
-  
+
   /**
    * Parses commands from array of CLI arguments and executes them
    * @param {string[]} cliArguments - array of CLI arguments to be processed
    */
   public processCommands(cliArguments: string[]): void {
     const parsedCommands = this.parseCommands(cliArguments);
-    
+
     if (Object.keys(parsedCommands).length === 0) { // add default if no commands
       parsedCommands[CLIApplication.DEFAULT_COMMAND] = [];
     }

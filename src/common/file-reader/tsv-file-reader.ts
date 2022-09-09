@@ -6,12 +6,23 @@ import { FileReaderInterface } from './file-reader.interface.js';
 export default class TSVFileReader implements FileReaderInterface {
   private rawData = '';
 
+  /**
+   * Creates new instance of TSVFileReader
+   * @param filename - tsv file path
+   */
   constructor(public filename: string) {}
 
+  /**
+   * Reades raw data from provided file
+   */
   public read(): void {
     this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
   }
 
+  /**
+   * Parses raw data from file and returns array of offers
+   * @returns {Offer[]} - array of parsed offers
+   */
   public toArray(): Offer[] {
     if (!this.rawData) {
       return [];
@@ -21,8 +32,8 @@ export default class TSVFileReader implements FileReaderInterface {
       .split('\n')
       .filter((row) => row.trim() !== '')
       .map((line) => line.split('\t'))
-      .map(([title, description, publishDate, city, previewImage, images, isFavorite, 
-        isPremium, rating, type, bedrooms, maxAdults, price, goods, name, email, 
+      .map(([title, description, publishDate, city, previewImage, images, isFavorite,
+        isPremium, rating, type, bedrooms, maxAdults, price, goods, name, email,
         avatarUrl, password, isPro, latitude, longitude]) => ({
         title,
         description,

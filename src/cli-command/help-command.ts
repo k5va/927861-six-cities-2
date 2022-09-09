@@ -1,11 +1,13 @@
-import { CliCommandInterface } from './cli-command.interface.js';
 import chalk from 'chalk';
+import { CliCommandInterface } from './cli-command.interface.js';
+import { CommandNames } from './command-names.enum.js';
 
 export default class HelpCommand implements CliCommandInterface {
-  private static readonly COMMAND_NAME = '--help';
+  public readonly name = CommandNames.help;
 
-  public readonly name = HelpCommand.COMMAND_NAME;
-
+  /**
+   * Executes command
+   */
   public execute() {
     console.log(chalk.green(`
       Программа для подготовки данных для REST API сервера.

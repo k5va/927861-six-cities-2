@@ -1,12 +1,15 @@
 import chalk from 'chalk';
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
+import { CommandNames } from './command-names.enum.js';
 
 export default class ImportCommand implements CliCommandInterface {
-  private static readonly COMMAND_NAME = '--import'; // TODO: move to enum
+  public readonly name = CommandNames.import;
 
-  public readonly name = ImportCommand.COMMAND_NAME;
-
+  /**
+   * Executes command
+   * @param {string} fileName - file path
+   */
   public execute(fileName: string) {
     const fileReader = new TSVFileReader(fileName.trim());
 
@@ -21,6 +24,6 @@ export default class ImportCommand implements CliCommandInterface {
       }
 
       console.log(chalk.red(`Не удалось импортировать данные из файла по причине: «${err.message}»`));
-    }  
+    }
   }
 }

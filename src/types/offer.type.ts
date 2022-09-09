@@ -19,6 +19,5 @@ export type Offer = {
   host: User;
   longitude: number;
   latitude: number;
-};
+}
 
-export default Offer;

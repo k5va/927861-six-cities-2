@@ -1,11 +1,10 @@
+import chalk from 'chalk';
 import { readFileSync } from 'fs';
 import { CliCommandInterface } from './cli-command.interface.js';
-import chalk from 'chalk';
+import { CommandNames } from './command-names.enum.js';
 
 export default class VersionCommand implements CliCommandInterface {
-  private static readonly COMMAND_NAME = '--version';
-
-  public readonly name = VersionCommand.COMMAND_NAME;
+  public readonly name = CommandNames.version;
 
   private readVersion(): string {
     const contentPageJSON = readFileSync('./package.json', 'utf-8');
@@ -13,8 +12,11 @@ export default class VersionCommand implements CliCommandInterface {
     return content.version;
   }
 
+  /**
+   * Executes command
+   */
   public execute() {
     const version = this.readVersion();
     console.log(chalk.red(version));
-}
+  }
 }
