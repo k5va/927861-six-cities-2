@@ -1,4 +1,5 @@
 import { CliCommandInterface } from './cli-command.interface.js';
+import chalk from 'chalk';
 
 export default class HelpCommand implements CliCommandInterface {
   private static readonly COMMAND_NAME = '--help';
@@ -6,7 +7,7 @@ export default class HelpCommand implements CliCommandInterface {
   public readonly name = HelpCommand.COMMAND_NAME;
 
   public execute() {
-    console.log(`
+    console.log(chalk.green(`
       Программа для подготовки данных для REST API сервера.
       Пример:
           cli.js --<command> [--arguments]
@@ -16,6 +17,6 @@ export default class HelpCommand implements CliCommandInterface {
           --import <filepath>:              # Импортирует в базу данных информацию из tsv-файла
           --generate <n> <filepath> <url>   # Создаёт файл в формате tsv с тестовыми данными
       `
-    );
+    ));
   }
 }

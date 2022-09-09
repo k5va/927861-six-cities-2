@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
 
@@ -11,6 +12,7 @@ export default class ImportCommand implements CliCommandInterface {
 
     try {
       fileReader.read();
+      console.log(chalk.blueBright('Loaded data:'));
       console.log(fileReader.toArray());
     } catch (err) {
 
@@ -18,7 +20,7 @@ export default class ImportCommand implements CliCommandInterface {
         throw err;
       }
 
-      console.log(`Не удалось импортировать данные из файла по причине: «${err.message}»`);
+      console.log(chalk.red(`Не удалось импортировать данные из файла по причине: «${err.message}»`));
     }  
   }
 }
