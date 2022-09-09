@@ -1,6 +1,6 @@
 import chalk from 'chalk';
-import { CliCommandInterface } from './cli-command.interface.js';
-import { CommandNames } from './command-names.enum.js';
+import CliCommandInterface from '../cli-command.interface.js';
+import CommandNames from '../command-names.enum.js';
 
 export default class HelpCommand implements CliCommandInterface {
   public readonly name = CommandNames.help;

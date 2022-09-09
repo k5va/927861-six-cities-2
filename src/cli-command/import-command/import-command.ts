@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
-import { CliCommandInterface } from './cli-command.interface.js';
-import { CommandNames } from './command-names.enum.js';
+import TSVFileReader from '../../common/file-reader/tsv-file-reader.js';
+import CliCommandInterface from '../cli-command.interface.js';
+import CommandNames from '../command-names.enum.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = CommandNames.import;

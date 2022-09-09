@@ -1,5 +1,4 @@
-import { CliCommandInterface } from '../cli-command/cli-command.interface.js';
-import { CommandNames } from '../cli-command/command-names.enum.js';
+import { CliCommandInterface, CommandNames } from '../cli-command/index.js';
 
 type ParsedCommand = {
   [key: string]: string[]
