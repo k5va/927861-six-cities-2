@@ -9,12 +9,12 @@ export default class HelpCommand implements CliCommandInterface {
     console.log(`
       Программа для подготовки данных для REST API сервера.
       Пример:
-          main.js --<command> [--arguments]
+          cli.js --<command> [--arguments]
       Команды:
-          --version:                   # выводит номер версии
-          --help:                      # печатает этот текст
-          --import <path>:             # импортирует данные из TSV
-          --generator <n> <path> <url> # генерирует произвольное количество тестовых данных
+          --version:                        # Выводит информацию о версии приложения
+          --help:                           # Печатает этот текст
+          --import <filepath>:              # Импортирует в базу данных информацию из tsv-файла
+          --generate <n> <filepath> <url>   # Создаёт файл в формате tsv с тестовыми данными
       `
     );
   }
