@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import TSVFileReader from '../../common/file-reader/tsv-file-reader.js';
 import CliCommandInterface from '../cli-command.interface.js';
 import CommandNames from '../command-names.enum.js';
+import { createOffer } from './create-offer.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = CommandNames.import;
@@ -32,7 +33,7 @@ export default class ImportCommand implements CliCommandInterface {
    * @param {string} line - line from file
    */
   private readLineHandler = (line: string) => {
-    console.log(chalk.blueBright(line));
+    console.log(createOffer(line));
   };
 
   /**

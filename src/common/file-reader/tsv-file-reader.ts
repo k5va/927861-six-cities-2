@@ -1,7 +1,5 @@
 import EventEmitter from 'events';
 import { createReadStream } from 'fs';
-import { OfferType } from '../../types/offer-type.enum.js';
-import { Offer } from '../../types/offer.type.js';
 import { FileReaderInterface } from './file-reader.interface.js';
 
 export default class TSVFileReader extends EventEmitter implements FileReaderInterface {
@@ -10,8 +8,6 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
   private static readonly READ_SIZE = 16000;
   private static readonly FILE_ENCODING = 'utf-8';
   private static readonly END_OF_LINE = '\n';
-
-  private rawData = '';
 
   /**
    * Creates new instance of TSVFileReader
@@ -43,41 +39,5 @@ export default class TSVFileReader extends EventEmitter implements FileReaderInt
         }
       })
       .once('end', () => this.emit(TSVFileReader.END_OF_FILE_EVENT));
-  }
-
-  /**
-   * Parses raw data from file and returns array of offers
-   * @returns {Offer[]} - array of parsed offers
-   */
-  public toArray(): Offer[] {
-    if (!this.rawData) {
-      return [];
-    }
-
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([title, description, publishDate, city, previewImage, images, isFavorite,
-        isPremium, rating, type, bedrooms, maxAdults, price, goods, name, email,
-        avatarUrl, password, isPro, latitude, longitude]) => ({
-        title,
-        description,
-        publishDate: new Date(publishDate),
-        city,
-        previewImage,
-        images: images.split(';'),
-        isFavorite: Boolean(isFavorite),
-        isPremium: Boolean(isPremium),
-        rating: Number(rating),
-        type: type as OfferType,
-        bedrooms: Number(bedrooms),
-        maxAdults: Number(maxAdults),
-        price: Number(price),
-        goods: goods.split(';'),
-        host: {name, email, password, isPro: Boolean(isPro), avatarUrl},
-        latitude: Number(latitude),
-        longitude: Number(longitude)
-      }));
   }
 }
