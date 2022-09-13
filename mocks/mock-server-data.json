@@ -15,7 +15,7 @@
       "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
       "Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed."
     ],
-    "published": [
+    "dates": [
       "2022-04-06T08:00:40.283Z",
       "2022-01-06T08:10:40.283Z",
       "2022-02-06T08:15:40.283Z",
@@ -66,7 +66,7 @@
       "Fridge",
       "Air conditioning"
     ],
-    "longitude": [
+    "longitudes": [
       "6.776314",
       "2.338499",
       "10.000654",
@@ -74,7 +74,7 @@
       "6.959974",
       "2.351499"
     ],
-    "latitude": [
+    "latitudes": [
       "50.938361",
       "51.225402",
       "52.37454",
