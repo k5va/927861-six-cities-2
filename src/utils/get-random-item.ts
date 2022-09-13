@@ -5,10 +5,6 @@ import getRandomNumber from './get-random-number.js';
  * @param items - array of items
  * @returns - random item from array
  */
-const getRandomItem = <T = string>(items: T[]): T => {
-  const randomNum = getRandomNumber(0, items.length - 1);
-  const index = Math.floor(randomNum);
-  return items[index];
-};
+const getRandomItem = <T = string>(items: T[]): T => items[getRandomNumber(0, items.length - 1)];
 
 export default getRandomItem;

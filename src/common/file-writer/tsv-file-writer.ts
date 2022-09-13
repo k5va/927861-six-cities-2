@@ -3,8 +3,6 @@ import { createWriteStream } from 'fs';
 import { FileWriterInterface } from './file-writer.interface.js';
 
 export default class TSVFileWriter implements FileWriterInterface {
-  public static readonly READ_LINE_EVENT = 'readline';
-  public static readonly END_OF_FILE_EVENT = 'end';
   private static readonly READ_SIZE = 16000;
   private static readonly FILE_ENCODING = 'utf-8';
   private static readonly END_OF_LINE = '\n';
