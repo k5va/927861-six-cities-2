@@ -15,7 +15,8 @@ export default class TSVFileReader implements FileReaderInterface {
   constructor(public filename: string) {}
 
   /**
-   * Reades raw data from provided file
+   * Reads raw data from provided file
+   * @returns {AsyncGenerator} - async generator that yields line of data from file
    */
   public async * read(): AsyncGenerator<string> {
     const readStream = createReadStream(
