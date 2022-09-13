@@ -8,7 +8,7 @@ export default class HelpCommand implements CliCommandInterface {
   /**
    * Executes command
    */
-  public execute() {
+  public async execute(): Promise<void> {
     console.log(chalk.green(`
       Программа для подготовки данных для REST API сервера.
       Пример:

@@ -1,7 +1,7 @@
-import { OfferType } from './offer-type.enum.js';
-import { User } from './user.type.js';
+import OfferType from './offer-type.enum.js';
+import User from './user.type.js';
 
-export type Offer = {
+type Offer = {
   title: string;
   description: string;
 	publishDate: Date;
@@ -21,3 +21,4 @@ export type Offer = {
   latitude: number;
 }
 
+export default Offer;

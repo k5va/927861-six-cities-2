@@ -1,10 +1,12 @@
-import { readFileSync } from 'fs';
-import { OfferType } from '../../types/offer-type.enum.js';
-import { Offer } from '../../types/offer.type.js';
+import { createReadStream } from 'fs';
 import { FileReaderInterface } from './file-reader.interface.js';
 
 export default class TSVFileReader implements FileReaderInterface {
-  private rawData = '';
+  public static readonly READ_LINE_EVENT = 'readline';
+  public static readonly END_OF_FILE_EVENT = 'end';
+  private static readonly READ_SIZE = 16000;
+  private static readonly FILE_ENCODING = 'utf-8';
+  private static readonly END_OF_LINE = '\n';
 
   /**
    * Creates new instance of TSVFileReader
@@ -13,45 +15,23 @@ export default class TSVFileReader implements FileReaderInterface {
   constructor(public filename: string) {}
 
   /**
-   * Reades raw data from provided file
+   * Reads raw data from provided file
+   * @returns {AsyncGenerator} - async generator that yields line of data from file
    */
-  public read(): void {
-    this.rawData = readFileSync(this.filename, { encoding: 'utf8' });
-  }
+  public async * read(): AsyncGenerator<string> {
+    const readStream = createReadStream(
+      this.filename, {highWaterMark: TSVFileReader.READ_SIZE, encoding: TSVFileReader.FILE_ENCODING}
+    );
 
-  /**
-   * Parses raw data from file and returns array of offers
-   * @returns {Offer[]} - array of parsed offers
-   */
-  public toArray(): Offer[] {
-    if (!this.rawData) {
-      return [];
+    let line = '';
+    let endOfLine = -1;
+
+    for await (const chunk of readStream) {
+      line = line.concat(chunk);
+      while ((endOfLine = line.indexOf(TSVFileReader.END_OF_LINE)) !== -1) {
+        yield line.substring(0, endOfLine);
+        line = line.substring(endOfLine + 1);
+      }
     }
-
-    return this.rawData
-      .split('\n')
-      .filter((row) => row.trim() !== '')
-      .map((line) => line.split('\t'))
-      .map(([title, description, publishDate, city, previewImage, images, isFavorite,
-        isPremium, rating, type, bedrooms, maxAdults, price, goods, name, email,
-        avatarUrl, password, isPro, latitude, longitude]) => ({
-        title,
-        description,
-        publishDate: new Date(publishDate),
-        city,
-        previewImage,
-        images: images.split(';'),
-        isFavorite: Boolean(isFavorite),
-        isPremium: Boolean(isPremium),
-        rating: Number(rating),
-        type: type as OfferType,
-        bedrooms: Number(bedrooms),
-        maxAdults: Number(maxAdults),
-        price: Number(price),
-        goods: goods.split(';'),
-        host: {name, email, password, isPro: Boolean(isPro), avatarUrl},
-        latitude: Number(latitude),
-        longitude: Number(longitude)
-      }));
   }
 }

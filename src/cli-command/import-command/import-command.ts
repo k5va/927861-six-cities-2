@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import TSVFileReader from '../../common/file-reader/tsv-file-reader.js';
 import CliCommandInterface from '../cli-command.interface.js';
 import CommandNames from '../command-names.enum.js';
+import { createOffer } from './create-offer.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = CommandNames.import;
@@ -10,13 +11,13 @@ export default class ImportCommand implements CliCommandInterface {
    * Executes command
    * @param {string} fileName - file path
    */
-  public execute(fileName: string) {
+  public async execute(fileName: string): Promise<void> {
     const fileReader = new TSVFileReader(fileName.trim());
 
     try {
-      fileReader.read();
-      console.log(chalk.blueBright('Loaded data:'));
-      console.log(fileReader.toArray());
+      for await (const line of fileReader.read()) {
+        console.log(createOffer(line));
+      }
     } catch (err) {
 
       if (!(err instanceof Error)) {
