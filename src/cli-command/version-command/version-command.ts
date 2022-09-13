@@ -15,7 +15,7 @@ export default class VersionCommand implements CliCommandInterface {
   /**
    * Executes command
    */
-  public execute() {
+  public async execute(): Promise<void> {
     const version = this.readVersion();
     console.log(chalk.red(version));
   }

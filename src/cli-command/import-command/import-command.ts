@@ -11,13 +11,13 @@ export default class ImportCommand implements CliCommandInterface {
    * Executes command
    * @param {string} fileName - file path
    */
-  public execute(fileName: string) {
+  public async execute(fileName: string): Promise<void> {
     const fileReader = new TSVFileReader(fileName.trim());
-    fileReader.addListener(TSVFileReader.READ_LINE_EVENT, this.readLineHandler);
-    fileReader.addListener(TSVFileReader.END_OF_FILE_EVENT, this.fileEndHandler);
 
     try {
-      fileReader.read();
+      for await (const line of fileReader.read()) {
+        console.log(createOffer(line));
+      }
     } catch (err) {
 
       if (!(err instanceof Error)) {
@@ -27,19 +27,4 @@ export default class ImportCommand implements CliCommandInterface {
       console.log(chalk.red(`Не удалось импортировать данные из файла по причине: «${err.message}»`));
     }
   }
-
-  /**
-   * Read line handler
-   * @param {string} line - line from file
-   */
-  private readLineHandler = (line: string) => {
-    console.log(createOffer(line));
-  };
-
-  /**
-   * End of file hander
-   */
-  private fileEndHandler = () => {
-    console.log(chalk.yellow('end of file'));
-  };
 }

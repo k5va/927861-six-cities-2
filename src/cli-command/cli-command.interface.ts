@@ -1,6 +1,6 @@
 interface CliCommandInterface {
     readonly name: string;
-    execute(...parameters: string[]): void;
+    execute(...parameters: string[]): Promise<void>;
 }
 
 export default CliCommandInterface;
