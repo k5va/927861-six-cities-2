@@ -1,5 +1,4 @@
-import { OfferType } from '../../types/offer-type.enum';
-import { Offer } from '../../types/offer.type';
+import { Offer, OfferType } from '../../types/index.js';
 
 const DATA_SPLITTER = '\t';
 const LIST_SPLITTER = ';';
