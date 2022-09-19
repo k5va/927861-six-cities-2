@@ -38,6 +38,8 @@
   "dependencies": {
     "chalk": "^5.0.1",
     "got": "^12.4.1",
-    "pino": "^8.5.0"
+    "inversify": "^6.0.1",
+    "pino": "^8.5.0",
+    "reflect-metadata": "^0.1.13"
   }
 }
