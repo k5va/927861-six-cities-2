@@ -7,7 +7,7 @@ import TSVFileWriter from '../../common/file-writer/tsv-file-writer.js';
 
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = CommandNames.generate;
-  private initialData!: MockData; // TODO: check !
+  private initialData!: MockData;
 
   /**
    * Executes command
