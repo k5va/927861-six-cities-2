@@ -8,7 +8,7 @@ import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/index.js';
 
 @injectable()
-export default class UserService implements GoodServiceInterface {
+export default class GoodService implements GoodServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.GoodModel) private readonly goodModel: types.ModelType<GoodEntity>
