@@ -21,6 +21,7 @@ import GoodService from '../../modules/good/good.service.js';
 import { OfferEntity, OfferModel } from '../../modules/offer/offer.entity.js';
 import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
 import OfferService from '../../modules/offer/offer.service.js';
+import { ImportCommand } from '../../cli-command/index.js';
 
 const appContainer = new Container();
 
@@ -36,5 +37,6 @@ appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantVa
 appContainer.bind<types.ModelType<GoodEntity>>(Component.GoodModel).toConstantValue(GoodModel);
 appContainer.bind<types.ModelType<CityEntity>>(Component.CityModel).toConstantValue(CityModel);
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
+appContainer.bind<ImportCommand>(Component.ImportCommand).to(ImportCommand);
 
 export { appContainer };

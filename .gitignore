@@ -9,6 +9,6 @@
 .DS_Store
 coverage
 *.log
-/mocks/offers.tsv
+/mocks/*.tsv
 *.env
 /mongodb/

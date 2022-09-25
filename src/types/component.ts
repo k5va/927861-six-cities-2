@@ -11,6 +11,7 @@ const Component = {
   GoodModel: Symbol.for('GoodModel'),
   CityModel: Symbol.for('CityModel'),
   OfferModel: Symbol.for('OfferModel'),
+  ImportCommand: Symbol.for('ImportCommand'),
 } as const;
 
 export default Component;
