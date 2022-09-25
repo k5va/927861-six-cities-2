@@ -6,9 +6,11 @@ const Component = {
   UserServiceInterface: Symbol.for('UserServiceInterface'),
   CityServiceInterface: Symbol.for('CityServiceInterface'),
   GoodServiceInterface: Symbol.for('GoodServiceInterface'),
+  OfferServiceInterface: Symbol.for('OfferServiceInterface'),
   UserModel: Symbol.for('UserModel'),
   GoodModel: Symbol.for('GoodModel'),
   CityModel: Symbol.for('CityModel'),
+  OfferModel: Symbol.for('OfferModel'),
 } as const;
 
 export default Component;

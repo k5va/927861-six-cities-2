@@ -1,4 +1,3 @@
-import {Good} from '../../types/index.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 
 const {prop, modelOptions} = typegoose;
@@ -10,16 +9,9 @@ export interface GoodEntity extends defaultClasses.Base {}
     collection: 'goods'
   }
 })
-export class GoodEntity extends defaultClasses.TimeStamps implements Good {
-
-  constructor(data: Good) {
-    super();
-
-    this.name = data.name;
-  }
-
+export class GoodEntity extends defaultClasses.TimeStamps {
   @prop({ unique: true, required: true })
-  public name: string;
+  public name!: string;
 }
 
 export const GoodModel = getModelForClass(GoodEntity);

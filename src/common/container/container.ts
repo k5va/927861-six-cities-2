@@ -18,6 +18,9 @@ import { CityServiceInterface } from '../../modules/city/city-service.interface.
 import { GoodServiceInterface } from '../../modules/good/good-service.interface.js';
 import CityService from '../../modules/city/city.service.js';
 import GoodService from '../../modules/good/good.service.js';
+import { OfferEntity, OfferModel } from '../../modules/offer/offer.entity.js';
+import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
+import OfferService from '../../modules/offer/offer.service.js';
 
 const appContainer = new Container();
 
@@ -28,8 +31,10 @@ appContainer.bind<DatabaseInterface>(Component.DatabaseInterface).to(DatabaseSer
 appContainer.bind<UserServiceInterface>(Component.UserServiceInterface).to(UserService).inSingletonScope();
 appContainer.bind<CityServiceInterface>(Component.CityServiceInterface).to(CityService).inSingletonScope();
 appContainer.bind<GoodServiceInterface>(Component.GoodServiceInterface).to(GoodService).inSingletonScope();
+appContainer.bind<OfferServiceInterface>(Component.OfferServiceInterface).to(OfferService).inSingletonScope();
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
-appContainer.bind<types.ModelType<GoodEntity>>(Component.UserModel).toConstantValue(GoodModel);
-appContainer.bind<types.ModelType<CityEntity>>(Component.UserModel).toConstantValue(CityModel);
+appContainer.bind<types.ModelType<GoodEntity>>(Component.GoodModel).toConstantValue(GoodModel);
+appContainer.bind<types.ModelType<CityEntity>>(Component.CityModel).toConstantValue(CityModel);
+appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
 
 export { appContainer };

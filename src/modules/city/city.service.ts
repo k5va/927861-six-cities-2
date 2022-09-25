@@ -15,10 +15,8 @@ export default class CityService implements CityServiceInterface {
   ) {}
 
   public async create(dto: CreateCityDto): Promise<DocumentType<CityEntity>> {
-    const city = new CityEntity(dto);
-
-    const result = await this.cityModel.create(city);
-    this.logger.info(`New good created: ${city.name}`);
+    const result = await this.cityModel.create(dto);
+    this.logger.info(`New good created: ${dto.name}`);
 
     return result;
   }

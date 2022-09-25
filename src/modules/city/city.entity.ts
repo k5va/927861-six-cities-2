@@ -1,4 +1,3 @@
-import {City} from '../../types/index.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 
 const {prop, modelOptions} = typegoose;
@@ -13,18 +12,9 @@ export interface CityEntity extends defaultClasses.Base {}
     collection: 'cities'
   }
 })
-export class CityEntity extends defaultClasses.TimeStamps implements City {
-
-  constructor(data: City) {
-    super();
-
-    this.name = data.name;
-    this.longitude = data.longitude;
-    this.latitude = data.latitude;
-  }
-
+export class CityEntity extends defaultClasses.TimeStamps {
   @prop({ unique: true, required: true })
-  public name: string;
+  public name!: string;
 
   @prop({ required: true, default: DEFAULT_LATITUDE })
   public latitude?: number;

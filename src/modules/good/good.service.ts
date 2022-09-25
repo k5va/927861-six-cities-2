@@ -15,10 +15,8 @@ export default class GoodService implements GoodServiceInterface {
   ) {}
 
   public async create(dto: CreateGoodDto): Promise<DocumentType<GoodEntity>> {
-    const good = new GoodEntity(dto);
-
-    const result = await this.goodModel.create(good);
-    this.logger.info(`New good created: ${good.name}`);
+    const result = await this.goodModel.create(dto);
+    this.logger.info(`New good created: ${dto.name}`);
 
     return result;
   }
