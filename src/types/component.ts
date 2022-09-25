@@ -5,6 +5,7 @@ const Component = {
   DatabaseInterface: Symbol.for('DatabaseInterface'),
   UserServiceInterface: Symbol.for('UserServiceInterface'),
   UserModel: Symbol.for('UserModel'),
+  GoodModel: Symbol.for('GoodModel'),
 } as const;
 
 export default Component;

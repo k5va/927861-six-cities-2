@@ -12,6 +12,7 @@ import { UserServiceInterface } from '../../modules/user/user-service.interface.
 import UserService from '../../modules/user/user.service.js';
 import { types } from '@typegoose/typegoose';
 import { UserEntity, UserModel } from '../../modules/user/user.entity.js';
+import { GoodEntity, GoodModel } from '../../modules/good/good.entity.js';
 
 const appContainer = new Container();
 
@@ -21,5 +22,6 @@ appContainer.bind<ConfigInterface>(Component.ConfigInterface).to(ConfigService).
 appContainer.bind<DatabaseInterface>(Component.DatabaseInterface).to(DatabaseService).inSingletonScope();
 appContainer.bind<UserServiceInterface>(Component.DatabaseInterface).to(UserService).inSingletonScope();
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
+appContainer.bind<types.ModelType<GoodEntity>>(Component.UserModel).toConstantValue(GoodModel);
 
 export { appContainer };
