@@ -1,28 +1,8 @@
+import { Bedrooms, MaxAdults, Price, Rating } from '../../const/index.js';
 import { MockData } from '../../types/index.js';
 import { getRandomBoolean, getRandomItem, getRandomItems, getRandomNumber }
   from '../../utils/index.js';
 import { OfferGeneratorInterface } from './offer-generator.interface';
-
-const enum Rating {
-  min = 1,
-  max = 5,
-  decimal = 1,
-}
-
-const enum Bedrooms {
-  min = 1,
-  max = 8,
-}
-
-const enum MaxAdults {
-  min = 1,
-  max = 10,
-}
-
-const enum Price {
-  min = 100,
-  max = 100000,
-}
 
 export default class OfferGenerator implements OfferGeneratorInterface {
   private static readonly MAX_OFFER_NUM = 1000;
