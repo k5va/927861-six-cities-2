@@ -4,3 +4,4 @@ export { default as User} from './user.type.js';
 export { default as MockData} from './mock-data.type.js';
 export { default as Component} from './component.js';
 export { default as Good} from './good.type.js';
+export { default as City} from './city.type.js';

@@ -6,6 +6,7 @@ const Component = {
   UserServiceInterface: Symbol.for('UserServiceInterface'),
   UserModel: Symbol.for('UserModel'),
   GoodModel: Symbol.for('GoodModel'),
+  CityModel: Symbol.for('CityModel'),
 } as const;
 
 export default Component;

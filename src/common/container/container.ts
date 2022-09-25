@@ -13,6 +13,7 @@ import UserService from '../../modules/user/user.service.js';
 import { types } from '@typegoose/typegoose';
 import { UserEntity, UserModel } from '../../modules/user/user.entity.js';
 import { GoodEntity, GoodModel } from '../../modules/good/good.entity.js';
+import { CityEntity, CityModel } from '../../modules/city/city.entity.js';
 
 const appContainer = new Container();
 
@@ -23,5 +24,6 @@ appContainer.bind<DatabaseInterface>(Component.DatabaseInterface).to(DatabaseSer
 appContainer.bind<UserServiceInterface>(Component.DatabaseInterface).to(UserService).inSingletonScope();
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
 appContainer.bind<types.ModelType<GoodEntity>>(Component.UserModel).toConstantValue(GoodModel);
+appContainer.bind<types.ModelType<CityEntity>>(Component.UserModel).toConstantValue(CityModel);
 
 export { appContainer };

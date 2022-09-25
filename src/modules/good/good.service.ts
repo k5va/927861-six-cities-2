@@ -24,7 +24,7 @@ export default class UserService implements GoodServiceInterface {
   }
 
   public async findByName(name: string): Promise<DocumentType<GoodEntity> | null> {
-    return this.goodModel.findOne({email: name});
+    return this.goodModel.findOne({name});
   }
 
   public async findOrCreate(dto: CreateGoodDto): Promise<DocumentType<GoodEntity>> {

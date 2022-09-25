@@ -1,3 +1,4 @@
+import City from './city.type.js';
 import OfferType from './offer-type.enum.js';
 import User from './user.type.js';
 
@@ -5,7 +6,7 @@ type Offer = {
   title: string;
   description: string;
 	publishDate: Date;
-	city: string;
+	city: City;
 	previewImage: string;
   images: string[];
   isFavorite: boolean;
