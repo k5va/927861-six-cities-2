@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { inject, injectable } from 'inversify';
 import { DatabaseInterface } from '../../common/database-client/database.interface.js';
 import TSVFileReader from '../../common/file-reader/tsv-file-reader.js';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { CityServiceInterface } from '../../modules/city/city-service.interface.js';
 import { GoodServiceInterface } from '../../modules/good/good-service.interface.js';
 import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
@@ -27,6 +28,7 @@ export default class ImportCommand implements CliCommandInterface {
     @inject(Component.UserServiceInterface) private userService: UserServiceInterface,
     @inject(Component.GoodServiceInterface) private goodService: GoodServiceInterface,
     @inject(Component.CityServiceInterface) private cityService: CityServiceInterface,
+    @inject(Component.LoggerInterface) private logger: LoggerInterface,
   ) {}
 
   /**
@@ -39,12 +41,14 @@ export default class ImportCommand implements CliCommandInterface {
     this.salt = salt;
 
     try {
+      this.logger.info('Trying to connect to DB');
       await this.dbClient.connect(uri);
+      this.logger.info('DB connection established');
 
       for await (const line of fileReader.read()) {
         const offer = createOffer(line);
         await this.saveOffer(offer);
-        console.log(`Offer saved to DB: ${offer}`);
+        this.logger.debug(`Offer saved to DB: ${offer.title}`);
       }
     } catch (err) {
 
@@ -52,9 +56,10 @@ export default class ImportCommand implements CliCommandInterface {
         throw err;
       }
 
-      console.log(chalk.red(err.message));
+      this.logger.error(chalk.red(err.message));
     } finally {
       this.dbClient.disconnect();
+      this.logger.info('DB connection closed');
     }
   }
 
