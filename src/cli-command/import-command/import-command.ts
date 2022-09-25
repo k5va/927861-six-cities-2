@@ -41,10 +41,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.salt = salt;
 
     try {
-      this.logger.info('Trying to connect to DB');
       await this.dbClient.connect(uri);
-      this.logger.info('DB connection established');
-
       for await (const line of fileReader.read()) {
         const offer = createOffer(line);
         await this.saveOffer(offer);
@@ -59,7 +56,6 @@ export default class ImportCommand implements CliCommandInterface {
       this.logger.error(chalk.red(err.message));
     } finally {
       this.dbClient.disconnect();
-      this.logger.info('DB connection closed');
     }
   }
 
