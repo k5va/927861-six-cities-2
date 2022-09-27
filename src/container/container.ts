@@ -4,19 +4,11 @@ import Application from '../app/application.js';
 import { Component } from '../types/index.js';
 import { ConfigInterface, ConfigService, LoggerService,
   LoggerInterface, DatabaseInterface, DatabaseService } from '../common/index.js';
-import { UserServiceInterface } from '../modules/user/user-service.interface.js';
-import UserService from '../modules/user/user.service.js';
+import { UserServiceInterface, CityServiceInterface, GoodServiceInterface,
+  OfferServiceInterface, UserService, CityService, OfferService, GoodService,
+  UserEntity, UserModel, GoodEntity, GoodModel, CityEntity, CityModel,
+  OfferEntity, OfferModel } from '../modules/index.js';
 import { types } from '@typegoose/typegoose';
-import { UserEntity, UserModel } from '../modules/user/user.entity.js';
-import { GoodEntity, GoodModel } from '../modules/good/good.entity.js';
-import { CityEntity, CityModel } from '../modules/city/city.entity.js';
-import { CityServiceInterface } from '../modules/city/city-service.interface.js';
-import { GoodServiceInterface } from '../modules/good/good-service.interface.js';
-import CityService from '../modules/city/city.service.js';
-import GoodService from '../modules/good/good.service.js';
-import { OfferEntity, OfferModel } from '../modules/offer/offer.entity.js';
-import { OfferServiceInterface } from '../modules/offer/offer-service.interface.js';
-import OfferService from '../modules/offer/offer.service.js';
 import { ImportCommand } from '../cli-command/index.js';
 
 const appContainer = new Container();

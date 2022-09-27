@@ -1,10 +1,8 @@
 import chalk from 'chalk';
 import { inject, injectable } from 'inversify';
 import { DatabaseInterface, TSVFileReader, LoggerInterface } from '../../common/index.js';
-import { CityServiceInterface } from '../../modules/city/city-service.interface.js';
-import { GoodServiceInterface } from '../../modules/good/good-service.interface.js';
-import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';
-import { UserServiceInterface } from '../../modules/user/user-service.interface.js';
+import { CityServiceInterface, GoodServiceInterface, OfferServiceInterface,
+  UserServiceInterface } from '../../modules/index.js';
 import { Component, Offer } from '../../types/index.js';
 import { getURI } from '../../utils/index.js';
 import CliCommandInterface from '../cli-command.interface.js';
