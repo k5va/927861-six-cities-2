@@ -4,7 +4,7 @@ import { OfferEntity } from './offer.entity.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 
 @injectable()

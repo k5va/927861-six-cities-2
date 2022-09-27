@@ -1,8 +1,6 @@
 import chalk from 'chalk';
 import { inject, injectable } from 'inversify';
-import { DatabaseInterface } from '../../common/database-client/database.interface.js';
-import TSVFileReader from '../../common/file-reader/tsv-file-reader.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { DatabaseInterface, TSVFileReader, LoggerInterface } from '../../common/index.js';
 import { CityServiceInterface } from '../../modules/city/city-service.interface.js';
 import { GoodServiceInterface } from '../../modules/good/good-service.interface.js';
 import { OfferServiceInterface } from '../../modules/offer/offer-service.interface.js';

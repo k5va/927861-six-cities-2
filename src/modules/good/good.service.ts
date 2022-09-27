@@ -4,7 +4,7 @@ import { GoodEntity } from './good.entity.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import CreateGoodDto from './dto/create-good.dto.js';
 import { GoodServiceInterface } from './good-service.interface.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 
 @injectable()

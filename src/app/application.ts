@@ -1,7 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { ConfigInterface } from '../common/config/config.interface';
-import { DatabaseInterface } from '../common/database-client/database.interface';
-import { LoggerInterface } from '../common/logger/logger.interface';
+import { ConfigInterface, DatabaseInterface, LoggerInterface } from '../common/index.js';
 import { Component } from '../types/index.js';
 import { getURI } from '../utils/index.js';
 

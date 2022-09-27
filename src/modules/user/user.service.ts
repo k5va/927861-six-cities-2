@@ -4,7 +4,7 @@ import { UserEntity } from './user.entity.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import CreateUserDto from './dto/create-user.dto.js';
 import { UserServiceInterface } from './user-service.interface.js';
-import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 
 @injectable()
