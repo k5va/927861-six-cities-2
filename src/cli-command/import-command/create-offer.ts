@@ -17,7 +17,7 @@ export const createOffer = (line: string): Offer => {
     title,
     description,
     publishDate: new Date(publishDate),
-    city,
+    city: {name: city},
     previewImage,
     images: images.split(LIST_SPLITTER),
     isFavorite: Boolean(isFavorite),
