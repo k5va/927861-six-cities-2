@@ -14,6 +14,8 @@ tags:
     description: Действия с комментариями.
   - name: favorites
     description: Действия с избранными предложениями.
+  - name: premium
+    description: Действия с премиальными предложениями.
   - name: users
     description: Действия с пользователем.
 paths:
@@ -323,6 +325,38 @@ paths:
           description: Ошибка данных
         "401":
           description: Пользователь не авторизован
+
+  /premium/{cityId}:
+     get:
+      tags:
+        - premium
+      summary: Премиальные предложения для города
+      description: Сервис предоставляет ресурс для получения списка премиальных предложений.
+        Премиальное предложение — предложение с флагом «Premium». Сервис возвращает не больше 3
+        предложений, отсортированных по дате публикации (по убыванию)
+      parameters:
+        - name: cityId
+          in: path
+          description: ID города
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      responses:
+        "200":
+          description: Список предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/shortOffer'
+                    - type: object
+        "404":
+          description: Ошибка данных, нет такого города.
 
   /users:
     post:
