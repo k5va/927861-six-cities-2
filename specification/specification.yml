@@ -49,7 +49,139 @@ paths:
           description: Ошибка данных
         "401":
           description: Пользователь не авторизован
+    get:
+      tags:
+        - offers
+      summary: Получение списка предложений
+      description: По умолчанию сервис возвращает не больше 60 предложений по аренде. Клиент может
+        запросить больше предложений, указав нужное количество в параметре запроса. Сервис всегда
+        возвращает отсортированный список предложений по дате публикации (по убыванию). Предложение
+        не содержит список комментариев. Только информацию об их количестве.
+      parameters:
+        - name: count
+          in: query
+          description: Количество возвращаемых предложений
+          required: false
+          schema:
+            type: number
+            example: 100
 
+      responses:
+        "200":
+          description: Список предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/shortOffer'
+                    - type: object
+
+  /offers/{offerId}:
+     put:
+      tags:
+        - offers
+      summary: Редактирование предложения
+      description: Редактирует предложение. Доступно только для зарегистрированных пользователей.
+        Клиент может редактировать только свои предложения
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      requestBody:
+        description: Информация для редактирования предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offer'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение обновлено. Объект предложеня.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "400":
+          description: Ошибка данных
+        "401":
+          description: Пользователь не авторизован
+
+     get:
+      tags:
+        - offers
+      summary: Получение детальной информации по предложению
+      description: Информация по предложению содержит все поля, а также флаг, позволяющий определить
+        принадлежность к избранным предложениям. Детальная информация по предложению включает сведения
+        о количестве комментариев. Сами комментарии не включены
+      parameters:
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      responses:
+        "200":
+          description: Объект предложеня.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "400":
+          description: Ошибка данных
+
+     delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      description: Удаляет предложение. Доступно только для зарегистрированных пользователей.
+        Клиент может удалять только свои предложения. При удалении предложения комментарии к предложению
+        удаляются автоматически.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      responses:
+        "204":
+          description: Предложение удалено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "400":
+          description: Ошибка данных
+        "401":
+          description: Пользователь не авторизован
 
   /users:
     post:
@@ -362,6 +494,54 @@ components:
         latitude:
           type: number
           example: 53.550341
+
+        commentsCount:
+          type: number
+          example: 10
+
+    shortOffer:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        title:
+          type: string
+          example: Penthouse, 4-5 rooms + 5 balconies
+
+        publishDate:
+          type: string
+          example: 2022-04-06T08:00:40.283Z
+
+        cityId:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        previewImage:
+          type: string
+          example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        isFavorite:
+          type: boolean
+          example: true
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4.5.
+
+        type:
+          type: string
+          example: apartment.
+
+        price:
+          type: number
+          example: 400
 
         commentsCount:
           type: number
