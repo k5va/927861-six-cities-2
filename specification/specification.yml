@@ -12,6 +12,8 @@ tags:
     description: Действия с предложениями.
   - name: comments
     description: Действия с комментариями.
+  - name: favorites
+    description: Действия с избранными предложениями.
   - name: users
     description: Действия с пользователем.
 paths:
@@ -255,6 +257,72 @@ paths:
                     - type: object
         "404":
           description: Ошибка данных. Данное предложение отсутсвует в базе.
+
+  /favorites:
+    get:
+      tags:
+        - favorites
+      summary: Получение списка избранных предложений
+      description: Сервис возвращает все предложения, добавленные в избранное. Ресурс доступен
+        только авторизованным клиентам.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+      responses:
+        "200":
+          description: Список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/shortOffer'
+                    - type: object
+        "401":
+          description: Пользователь не авторизован
+
+  /favorites/{offerId}:
+     post:
+      tags:
+        - favorites
+      summary: Добавление и удаление предложения в/из избранного
+      description: Сервис предоставляет ресурс для добавления и удаления любого предложения в/из
+        списка избранных предложений. Ресурс доступен только авторизованным клиентам.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: type
+          in: query
+          description: тип действия 1 - добавить / 0 - удалить
+          required: true
+          schema:
+            type: number
+            example: 1
+
+      responses:
+        "200":
+          description: Статус избранного обновлен. Обновленный объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "404":
+          description: Ошибка данных
+        "401":
+          description: Пользователь не авторизован
 
   /users:
     post:
