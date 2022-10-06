@@ -15,7 +15,7 @@ tags:
   - name: users
     description: Действия с пользователем.
 paths:
-  /users/register:
+  /users:
     post:
       tags:
         - users
@@ -36,6 +36,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
+        "409":
+          description: Пользователь с таким email уже существует.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Сервис предоставляет ресурс для проверки состояния клиента — авторизован или нет.
+        Проверка состояния клиента производится на основании сессионного токена.
+        Если клиент авторизован, сервис возвращает соответствующий код состояния
+        и информацию о пользователе
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+      responses:
+        "200":
+          description: Пользователь авторизован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "401":
+          description: Пользователь не авторизован.
+
 
   /users/login:
     post:
@@ -62,27 +91,6 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
-    # Add token header
-    get:
-      tags:
-        - users
-      summary: Проверка состояния пользователя
-      description: Сервис предоставляет ресурс для проверки состояния клиента — авторизован или нет.
-        Проверка состояния клиента производится на основании сессионного токена.
-        Если клиент авторизован, сервис возвращает соответствующий код состояния
-        и информацию о пользователе
-      responses:
-        "200":
-          description: Пользователь авторизован. Объект пользователя.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-        "401":
-          description: Пользователь не авторизован.
-
-
-# Добавить требование наличия токена в заголовок. Вернуть код состояния ошибки.
   /users/logout:
     delete:
       tags:
@@ -90,10 +98,20 @@ paths:
       summary: Выход из закрытой части приложения
       description: Если токен прошёл проверку, сервис завершает пользовательский сеанс (сессию).
         В противном случае возвращает ошибку и соответствующий код состояния.
-      responses:
-        "200":
-          description: Сеанс работы пользователя завершен.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
 
+      responses:
+        "204":
+          description: Сеанс работы пользователя завершен.
+        "400":
+          description: Ошибка запроса.
 
 components:
   schemas:
