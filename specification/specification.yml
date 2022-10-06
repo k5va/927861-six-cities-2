@@ -15,6 +15,42 @@ tags:
   - name: users
     description: Действия с пользователем.
 paths:
+  /offers:
+    post:
+      tags:
+        - offers
+      summary: Создание нового предложения
+      description: Создает новое предложение.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение создано. Объект предложеня.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "400":
+          description: Ошибка данных
+        "401":
+          description: Пользователь не авторизован
+
+
   /users:
     post:
       tags:
@@ -174,3 +210,160 @@ components:
         password:
           type: string
           example: 123456
+
+    createOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Penthouse, 4-5 rooms + 5 balconies
+
+        description:
+          type: string
+          example: Peaceful studio in the most wanted area in town. Quiet house Near of everything.
+            Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a
+            walking distance.
+
+        publishDate:
+          type: string
+          example: 2022-04-06T08:00:40.283Z
+
+        cityId:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        previewImage:
+          type: string
+          example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        images:
+          type: array
+          items:
+            type: string
+            example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        isFavorite:
+          type: boolean
+          example: true
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4.5.
+
+        type:
+          type: string
+          example: apartment.
+
+        bedrooms:
+          type: number
+          example: 4
+
+        price:
+          type: number
+          example: 400
+
+        goods:
+          type: array
+          items:
+            type: string
+            example: 633041890aa1e923453c294c
+
+        host:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        longitude:
+          type: number
+          example: 6.776314
+
+        latitude:
+          type: number
+          example: 53.550341
+
+    offer:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        title:
+          type: string
+          example: Penthouse, 4-5 rooms + 5 balconies
+
+        description:
+          type: string
+          example: Peaceful studio in the most wanted area in town. Quiet house Near of everything.
+            Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a
+            walking distance.
+
+        publishDate:
+          type: string
+          example: 2022-04-06T08:00:40.283Z
+
+        cityId:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        previewImage:
+          type: string
+          example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        images:
+          type: array
+          items:
+            type: string
+            example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        isFavorite:
+          type: boolean
+          example: true
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4.5.
+
+        type:
+          type: string
+          example: apartment.
+
+        bedrooms:
+          type: number
+          example: 4
+
+        price:
+          type: number
+          example: 400
+
+        goods:
+          type: array
+          items:
+            type: string
+            example: 633041890aa1e923453c294c
+
+        host:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        longitude:
+          type: number
+          example: 6.776314
+
+        latitude:
+          type: number
+          example: 53.550341
+
+        commentsCount:
+          type: number
+          example: 10
+
