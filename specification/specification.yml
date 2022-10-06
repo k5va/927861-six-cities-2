@@ -183,6 +183,79 @@ paths:
         "401":
           description: Пользователь не авторизован
 
+  /comments/{offerId}:
+     post:
+      tags:
+        - comments
+      summary: Добавление комментария к предложению
+      description: Добавлять комментарии могут только авторизованные клиенты. В случае успешного
+        добавления комментария сервис возвращает информацию о созданном комментарии (объект комментария).
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      requestBody:
+        description: Данные комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+
+      responses:
+        "201":
+          description: Созданный объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        "400":
+          description: Ошибка данных
+        "401":
+          description: Пользователь не авторизован
+
+     get:
+      tags:
+        - comments
+      summary: Получение списока комментариев для предложения
+      description: Сервис всегда возвращает список из 50 (или меньше) последних комментариев.
+        Комментарии отсортированы по дате публикации (по убыванию). Сначала новые, потом старые.
+      parameters:
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      responses:
+        "200":
+          description: Список комментариев.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/comment'
+                    - type: object
+        "404":
+          description: Ошибка данных. Данное предложение отсутсвует в базе.
+
   /users:
     post:
       tags:
@@ -547,3 +620,46 @@ components:
           type: number
           example: 10
 
+    createComment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: Very nice appartment!
+
+        publishDate:
+          type: string
+          example: 2022-04-06T08:00:40.283Z
+
+        rating:
+          type: number
+          example: 4.4
+
+        userId:
+          type: string
+          example: 633041890aa1e923453c294c
+
+    comment:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        text:
+          type: string
+          example: Very nice appartment!
+
+        publishDate:
+          type: string
+          example: 2022-04-06T08:00:40.283Z
+
+        rating:
+          type: number
+          example: 4.4
+
+        userId:
+          type: string
+          example: 633041890aa1e923453c294c
