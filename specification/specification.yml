@@ -24,7 +24,9 @@ paths:
       tags:
         - offers
       summary: Создание нового предложения
-      description: Создает новое предложение.
+      description: Сервис предоставляет ресурс для создания новых предложений. Создавать
+        предложения могут только авторизованные клиенты. В случае успешного создания предложения
+        сервис в ответе возвращает информацию о созданном предложении (объект предложения).
       parameters:
         - name: X-Token
           in: header
@@ -44,15 +46,25 @@ paths:
 
       responses:
         "201":
-          description: Предложение создано. Объект предложеня.
+          description: Предложение создано. Объект предложения.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
         "400":
           description: Ошибка данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorMessage'
+
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
+
     get:
       tags:
         - offers
@@ -116,15 +128,24 @@ paths:
 
       responses:
         "200":
-          description: Предложение обновлено. Объект предложеня.
+          description: Предложение обновлено. Объект предложения.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
         "400":
           description: Ошибка данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorMessage'
+
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
      get:
       tags:
@@ -149,8 +170,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
-        "400":
-          description: Ошибка данных
+        "404":
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
 
      delete:
       tags:
@@ -178,14 +203,18 @@ paths:
       responses:
         "204":
           description: Предложение удалено.
+        "404":
+          description: Предложение не найдено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offer'
-        "400":
-          description: Ошибка данных
+                $ref: '#/components/schemas/NotFoundErrorMessage'
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
   /comments/{offerId}:
      post:
@@ -227,8 +256,16 @@ paths:
                 $ref: '#/components/schemas/comment'
         "400":
           description: Ошибка данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorMessage'
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
      get:
       tags:
@@ -258,7 +295,11 @@ paths:
                     - $ref: '#/components/schemas/comment'
                     - type: object
         "404":
-          description: Ошибка данных. Данное предложение отсутсвует в базе.
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
 
   /favorites:
     get:
@@ -290,6 +331,10 @@ paths:
                     - type: object
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
   /favorites/{offerId}:
      post:
@@ -306,9 +351,16 @@ paths:
           schema:
             type: string
             example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-        - name: type
+        - name: offerId
+          in: path
+          description: ID предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+        - name: action
           in: query
-          description: тип действия 1 - добавить / 0 - удалить
+          description: тип действия 1 - добавить / 0 - удалить из избранных
           required: true
           schema:
             type: number
@@ -322,9 +374,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/offer'
         "404":
-          description: Ошибка данных
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
         "401":
           description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
   /premium/{cityId}:
      get:
@@ -357,13 +417,18 @@ paths:
                     - type: object
         "404":
           description: Ошибка данных, нет такого города.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
 
   /users:
     post:
       tags:
         - users
-      summary: Создание нового пользователя
-      description: Создает нового пользователя.
+      summary: Создает нового пользователя.
+      description: Создавать новых пользователей могут только анонимные клиенты. Email создаваемого пользователя уникален. В системе не может быть двух пользователей с одинаковым email. В случае успешного создания пользователя сервис
+        возвращает информацию о созданном пользователе (объект пользователя). Возвращаемая информация не содержит конфиденциальных данных (например, пароль).
       requestBody:
         description: Информация для создания нового пользователя.
         content:
@@ -374,13 +439,17 @@ paths:
 
       responses:
         "201":
-          description: Пользователь зарегистрирован. Объект пользователя.
+          description: Пользователь создан. Объект пользователя.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/user'
-        "409":
-          description: Пользователь с таким email уже существует.
+        "400":
+          description: Ошибка данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorMessage'
 
     get:
       tags:
@@ -407,7 +476,10 @@ paths:
                 $ref: '#/components/schemas/user'
         "401":
           description: Пользователь не авторизован.
-
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
 
   /users/login:
     post:
@@ -765,3 +837,24 @@ components:
         userId:
           type: string
           example: 633041890aa1e923453c294c
+
+    AuthErrorMessage:
+      type: object
+      properties:
+        error:
+          type: string
+          example: You are not logged in or you do not have permission to this page.
+
+    NotFoundErrorMessage:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Offer not found - id 633041890aa1e923453c294c
+
+    DataErrorMessage:
+      type: object
+      properties:
+        error:
+          type: string
+          example: offer price should be of type number
