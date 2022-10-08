@@ -7,7 +7,7 @@ import { OfferServiceInterface } from './offer-service.interface.js';
 import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 import updateOfferDto from './dto/update-offer.dto.js';
-import { DEFAULT_OFFER_COUNT } from './offer.const.js';
+import { DEFAULT_OFFER_COUNT, PREMIUM_OFFER_COUNT } from './offer.const.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -47,6 +47,15 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .find()
       .limit(count)
+      .populate(['hostId', 'goods'])
+      .exec();
+  }
+
+  public async findPremiumByCity(cityId: string): Promise<DocumentType<OfferEntity>[]> {
+    return this.offerModel
+      .find({cityId, isPremium: true})
+      .sort({publishDate: 'descending'})
+      .limit(PREMIUM_OFFER_COUNT)
       .populate(['hostId', 'goods'])
       .exec();
   }
