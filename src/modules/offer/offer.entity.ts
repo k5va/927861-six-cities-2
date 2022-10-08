@@ -36,8 +36,8 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: false })
   public isFavorite!: boolean;
 
-  @prop({ required: true, type: String, default: [] })
-  public inFavorites!: string[];
+  @prop({ ref: UserEntity, required: true, default: [] })
+  public inFavorites!: Ref<UserEntity>[];
 
   @prop({ required: true, default: false })
   public isPremium!: boolean;
