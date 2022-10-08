@@ -5,7 +5,7 @@ export { GoodServiceInterface } from './good/good-service.interface.js';
 export { default as GoodService } from './good/good.service.js';
 export { GoodEntity, GoodModel } from './good/good.entity.js';
 export { OfferServiceInterface } from './offer/offer-service.interface.js';
-export { default as OfferService } from './offer/offer.service.js';
+export { OfferService } from './offer/offer.service.js';
 export { OfferEntity, OfferModel } from './offer/offer.entity.js';
 export { UserServiceInterface } from './user/user-service.interface.js';
 export { default as UserService } from './user/user.service.js';
