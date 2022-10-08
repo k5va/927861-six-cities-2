@@ -17,7 +17,7 @@ export default class OfferService implements OfferServiceInterface {
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create(dto);
+    const result = await this.offerModel.create({...dto, inFavorites: dto.isFavorite ? [dto.hostId] : []});
     this.logger.info(`New Offer created: ${dto.title}`);
 
     return result;
@@ -43,6 +43,24 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
+  public async addToFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(id, {'$addToSet': {
+        inFavorites: userId,
+      }})
+      .populate(['hostId', 'goods'])
+      .exec();
+  }
+
+  public async removeFromFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(id, {'$pull': {
+        inFavorites: userId,
+      }})
+      .populate(['hostId', 'goods'])
+      .exec();
+  }
+
   public async find(count: number = DEFAULT_OFFER_COUNT): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find()
@@ -56,6 +74,13 @@ export default class OfferService implements OfferServiceInterface {
       .find({cityId, isPremium: true})
       .sort({publishDate: 'descending'})
       .limit(PREMIUM_OFFER_COUNT)
+      .populate(['hostId', 'goods'])
+      .exec();
+  }
+
+  public async findFavoritesByUser(userId: string): Promise<DocumentType<OfferEntity>[]> {
+    return this.offerModel
+      .find({inFavorites: userId})
       .populate(['hostId', 'goods'])
       .exec();
   }

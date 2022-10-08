@@ -10,4 +10,7 @@ export interface OfferServiceInterface {
   delete(id: string): Promise<DocumentType<OfferEntity> | null>;
   find(): Promise<DocumentType<OfferEntity>[]>;
   findPremiumByCity(cityId: string): Promise<DocumentType<OfferEntity>[]>;
+  findFavoritesByUser(userId: string): Promise<DocumentType<OfferEntity>[]>;
+  addToFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
+  removeFromFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
 }
