@@ -7,10 +7,12 @@ const Component = {
   CityServiceInterface: Symbol.for('CityServiceInterface'),
   GoodServiceInterface: Symbol.for('GoodServiceInterface'),
   OfferServiceInterface: Symbol.for('OfferServiceInterface'),
+  CommentServiceInterface: Symbol.for('CommentServiceInterface'),
   UserModel: Symbol.for('UserModel'),
   GoodModel: Symbol.for('GoodModel'),
   CityModel: Symbol.for('CityModel'),
   OfferModel: Symbol.for('OfferModel'),
+  CommentModel: Symbol.for('CommentModel'),
   ImportCommand: Symbol.for('ImportCommand'),
 } as const;
 

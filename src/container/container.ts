@@ -7,7 +7,7 @@ import { ConfigInterface, ConfigService, LoggerService,
 import { UserServiceInterface, CityServiceInterface, GoodServiceInterface,
   OfferServiceInterface, UserService, CityService, OfferService, GoodService,
   UserEntity, UserModel, GoodEntity, GoodModel, CityEntity, CityModel,
-  OfferEntity, OfferModel } from '../modules/index.js';
+  OfferEntity, OfferModel, CommentServiceInterface, CommentService } from '../modules/index.js';
 import { types } from '@typegoose/typegoose';
 import { ImportCommand } from '../cli-command/index.js';
 
@@ -21,6 +21,7 @@ appContainer.bind<UserServiceInterface>(Component.UserServiceInterface).to(UserS
 appContainer.bind<CityServiceInterface>(Component.CityServiceInterface).to(CityService).inSingletonScope();
 appContainer.bind<GoodServiceInterface>(Component.GoodServiceInterface).to(GoodService).inSingletonScope();
 appContainer.bind<OfferServiceInterface>(Component.OfferServiceInterface).to(OfferService).inSingletonScope();
+appContainer.bind<CommentServiceInterface>(Component.CommentServiceInterface).to(CommentService).inSingletonScope();
 appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantValue(UserModel);
 appContainer.bind<types.ModelType<GoodEntity>>(Component.GoodModel).toConstantValue(GoodModel);
 appContainer.bind<types.ModelType<CityEntity>>(Component.CityModel).toConstantValue(CityModel);
