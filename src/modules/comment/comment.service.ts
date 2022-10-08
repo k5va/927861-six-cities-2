@@ -7,19 +7,23 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 import { DEFAULT_COMMENT_COUNT } from './comment.const.js';
+import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 
 @injectable()
 export default class CommentService implements CommentServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
-    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
+    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>,
+    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface
   ) {}
 
   public async create(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
-    const result = await this.commentModel.create(dto);
+    const comment = await this.commentModel.create(dto);
+    await this.offerService.incCommentCount(dto.offerId);
+
     this.logger.info(`New comment created: ${dto.text}`);
 
-    return result;
+    return comment;
   }
 
   public async findByOfferId(offerId: string): Promise<DocumentType<CommentEntity>[]> {

@@ -17,10 +17,10 @@ export default class OfferService implements OfferServiceInterface {
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
-    const result = await this.offerModel.create({...dto, inFavorites: dto.isFavorite ? [dto.hostId] : []});
+    const offer = await this.offerModel.create({...dto, inFavorites: dto.isFavorite ? [dto.hostId] : []});
     this.logger.info(`New Offer created: ${dto.title}`);
 
-    return result;
+    return offer.populate(['hostId', 'goods']);
   }
 
   public async findById(id: string): Promise<DocumentType<OfferEntity> | null> {
@@ -34,6 +34,13 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .findByIdAndDelete(id)
       .exec();
+  }
+
+  public async incCommentCount(id: string): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(id, {'$inc': {
+        commentCount: 1,
+      }}).exec();
   }
 
   public async update(id: string, dto: updateOfferDto): Promise<DocumentType<OfferEntity> | null> {

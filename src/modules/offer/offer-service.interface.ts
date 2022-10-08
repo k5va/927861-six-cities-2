@@ -13,4 +13,5 @@ export interface OfferServiceInterface {
   findFavoritesByUser(userId: string): Promise<DocumentType<OfferEntity>[]>;
   addToFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
   removeFromFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
+  incCommentCount(id: string): Promise<DocumentType<OfferEntity> | null>;
 }
