@@ -1,6 +1,6 @@
 const enum Price {
-  min = 100,
-  max = 100000,
+  Min = 100,
+  Max = 100000,
 }
 
 export default Price;

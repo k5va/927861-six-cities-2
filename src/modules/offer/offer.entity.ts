@@ -15,10 +15,10 @@ export interface OfferEntity extends defaultClasses.Base {}
   }
 })
 export class OfferEntity extends defaultClasses.TimeStamps {
-  @prop({ required: true, minlength: TitleLength.min, maxlength: TitleLength.max })
+  @prop({ required: true, minlength: TitleLength.Min, maxlength: TitleLength.Max })
   public title!: string;
 
-  @prop({ required: true, minlength: DescriptionLength.min, maxlength: DescriptionLength.max })
+  @prop({ required: true, minlength: DescriptionLength.Min, maxlength: DescriptionLength.Max })
   public description!: string;
 
   @prop({ required: true})
@@ -36,22 +36,25 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: false })
   public isFavorite!: boolean;
 
+  @prop({ ref: UserEntity, required: true, default: [] })
+  public inFavorites!: Ref<UserEntity>[];
+
   @prop({ required: true, default: false })
   public isPremium!: boolean;
 
-  @prop({ required: true, min: Rating.min, max: Rating.max })
+  @prop({ required: true, min: Rating.Min, max: Rating.Max })
   public rating!: number;
 
   @prop({ required: true, type: () => String, enum: OfferType })
   public type!: OfferType;
 
-  @prop({ required: true, min: Bedrooms.min, max: Bedrooms.max })
+  @prop({ required: true, min: Bedrooms.Min, max: Bedrooms.Max })
   public bedrooms!: number;
 
-  @prop({ required: true, min: MaxAdults.min, max: MaxAdults.max })
+  @prop({ required: true, min: MaxAdults.Min, max: MaxAdults.Max })
   public maxAdults!: number;
 
-  @prop({ required: true, min: Price.min, max: Price.max })
+  @prop({ required: true, min: Price.Min, max: Price.Max })
   public price!: number;
 
   @prop({ ref: GoodEntity, required: true, default: [], _id: false })

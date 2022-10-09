@@ -4,3 +4,4 @@ export { default as MaxAdults } from './max-adults.enum.js';
 export { default as Price } from './price.enum.js';
 export { default as TitleLength } from './title-length.enum.js';
 export { default as DescriptionLength } from './description-length.enum.js';
+export { default as CommentLength } from './comment-length.enum.js';

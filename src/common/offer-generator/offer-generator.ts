@@ -33,11 +33,11 @@ export default class OfferGenerator implements OfferGeneratorInterface {
       const images = getRandomItems(this.mockData.images).join(OfferGenerator.ITEMS_SPLITTER);
       const isFavorite = getRandomBoolean();
       const isPremium = getRandomBoolean();
-      const rating = getRandomNumber(Rating.min, Rating.max, Rating.decimal);
+      const rating = getRandomNumber(Rating.Min, Rating.Max, Rating.Decimal);
       const type = getRandomItem(this.mockData.types);
-      const bedrooms = getRandomNumber(Bedrooms.min, Bedrooms.max);
-      const maxAdults = getRandomNumber(MaxAdults.min, MaxAdults.max);
-      const price = getRandomNumber(Price.min, Price.max);
+      const bedrooms = getRandomNumber(Bedrooms.Min, Bedrooms.Max);
+      const maxAdults = getRandomNumber(MaxAdults.Min, MaxAdults.Max);
+      const price = getRandomNumber(Price.Min, Price.Max);
       const goods = getRandomItems(this.mockData.goods).join(OfferGenerator.ITEMS_SPLITTER);
       const name = getRandomItem(this.mockData.names);
       const email = getRandomItem(this.mockData.emails);

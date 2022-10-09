@@ -1,6 +1,6 @@
 const enum Bedrooms {
-  min = 1,
-  max = 8,
+  Min = 1,
+  Max = 8,
 }
 
 export default Bedrooms;

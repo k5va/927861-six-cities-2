@@ -1,7 +1,7 @@
 const enum Rating {
-  min = 1,
-  max = 5,
-  decimal = 1,
+  Min = 1,
+  Max = 5,
+  Decimal = 1,
 }
 
 export default Rating;
