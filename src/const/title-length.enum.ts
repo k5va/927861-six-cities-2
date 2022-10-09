@@ -1,6 +1,6 @@
 enum TitleLength {
-  min = 10,
-  max = 100,
+  Min = 10,
+  Max = 100,
 }
 
 export default TitleLength;

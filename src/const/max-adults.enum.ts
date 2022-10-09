@@ -1,6 +1,6 @@
 const enum MaxAdults {
-  min = 1,
-  max = 10,
+  Min = 1,
+  Max = 10,
 }
 
 export default MaxAdults;
