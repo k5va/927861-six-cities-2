@@ -34,12 +34,10 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async delete(id: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findByIdAndDelete(id)
-      .exec();
-
-    // TODO: delete all comments
+  public async delete(id: string): Promise<void> {
+    this.offerModel.findByIdAndDelete(id).exec();
+    this.commentService.deleteAllByOfferId(id);
+    this.logger.info(`Offer ${id} deleted`);
   }
 
   public async addComment(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {

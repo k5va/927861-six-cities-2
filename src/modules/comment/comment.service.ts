@@ -36,4 +36,10 @@ export default class CommentService implements CommentServiceInterface {
       .find({offerId})
       .exec();
   }
+
+  public async deleteAllByOfferId(offerId: string): Promise<void> {
+    this.commentModel
+      .deleteMany({offerId})
+      .exec();
+  }
 }
