@@ -7,7 +7,7 @@ import { ConfigInterface, ConfigService, LoggerService,
 import { UserServiceInterface, CityServiceInterface, GoodServiceInterface,
   OfferServiceInterface, UserService, CityService, OfferService, GoodService,
   UserEntity, UserModel, GoodEntity, GoodModel, CityEntity, CityModel,
-  OfferEntity, OfferModel, CommentServiceInterface, CommentService } from '../modules/index.js';
+  OfferEntity, OfferModel, CommentServiceInterface, CommentService, CommentEntity, CommentModel } from '../modules/index.js';
 import { types } from '@typegoose/typegoose';
 import { ImportCommand } from '../cli-command/index.js';
 
@@ -26,6 +26,7 @@ appContainer.bind<types.ModelType<UserEntity>>(Component.UserModel).toConstantVa
 appContainer.bind<types.ModelType<GoodEntity>>(Component.GoodModel).toConstantValue(GoodModel);
 appContainer.bind<types.ModelType<CityEntity>>(Component.CityModel).toConstantValue(CityModel);
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
+appContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
 appContainer.bind<ImportCommand>(Component.ImportCommand).to(ImportCommand);
 
 export { appContainer };

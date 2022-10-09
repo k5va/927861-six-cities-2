@@ -8,12 +8,16 @@ import { LoggerInterface } from '../../common/index.js';
 import { Component } from '../../types/index.js';
 import updateOfferDto from './dto/update-offer.dto.js';
 import { DEFAULT_OFFER_COUNT, PREMIUM_OFFER_COUNT } from './offer.const.js';
+import CreateCommentDto from '../comment/dto/create-comment.dto.js';
+import { CommentEntity } from '../comment/comment.entity.js';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -34,13 +38,28 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .findByIdAndDelete(id)
       .exec();
+
+    // TODO: delete all comments
   }
 
-  public async incCommentCount(id: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findByIdAndUpdate(id, {'$inc': {
-        commentCount: 1,
-      }}).exec();
+  public async addComment(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
+    const {offerId} = dto;
+    const comment = await this.commentService.create(dto);
+    const offerComments = await this.commentService.findAllByOfferId(offerId);
+
+    const commentCount = offerComments?.length ?? 0;
+    const avgRating = commentCount > 0
+      ? offerComments?.map(({rating}) => rating).reduce((avg, rating) => avg + rating / commentCount, 0)
+      : 0;
+
+    await this.offerModel.findByIdAndUpdate(offerId,
+      [
+        { $set: { rating:  avgRating } },
+        { $set: { commentCount: commentCount } },
+      ]
+    );
+
+    return comment;
   }
 
   public async update(id: string, dto: updateOfferDto): Promise<DocumentType<OfferEntity> | null> {
