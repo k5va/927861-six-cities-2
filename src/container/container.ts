@@ -3,13 +3,16 @@ import { Container } from 'inversify';
 import Application from '../app/application.js';
 import { Component } from '../types/index.js';
 import { ConfigInterface, ConfigService, LoggerService,
-  LoggerInterface, DatabaseInterface, DatabaseService } from '../common/index.js';
+  LoggerInterface, DatabaseInterface, DatabaseService, ControllerInterface, ExceptionFilterInterface,
+  ExceptionFilter } from '../common/index.js';
 import { UserServiceInterface, CityServiceInterface, GoodServiceInterface,
   OfferServiceInterface, UserService, CityService, OfferService, GoodService,
   UserEntity, UserModel, GoodEntity, GoodModel, CityEntity, CityModel,
-  OfferEntity, OfferModel, CommentServiceInterface, CommentService, CommentEntity, CommentModel } from '../modules/index.js';
+  OfferEntity, OfferModel, CommentServiceInterface, CommentService,
+  CommentEntity, CommentModel } from '../modules/index.js';
 import { types } from '@typegoose/typegoose';
 import { ImportCommand } from '../cli-command/index.js';
+import UserController from '../modules/user/user.controller.js';
 
 const appContainer = new Container();
 
@@ -28,5 +31,7 @@ appContainer.bind<types.ModelType<CityEntity>>(Component.CityModel).toConstantVa
 appContainer.bind<types.ModelType<OfferEntity>>(Component.OfferModel).toConstantValue(OfferModel);
 appContainer.bind<types.ModelType<CommentEntity>>(Component.CommentModel).toConstantValue(CommentModel);
 appContainer.bind<ImportCommand>(Component.ImportCommand).to(ImportCommand);
+appContainer.bind<ControllerInterface>(Component.UserController).to(UserController).inSingletonScope();
+appContainer.bind<ExceptionFilterInterface>(Component.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
 
 export { appContainer };
