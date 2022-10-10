@@ -4,3 +4,7 @@ GET http://localhost:3123/api HTTP/1.1
 ###
 # Check user status
 GET http://localhost:3000/users HTTP/1.1
+
+###
+# get offers
+GET http://localhost:3000/offers?count=5 HTTP/1.1
