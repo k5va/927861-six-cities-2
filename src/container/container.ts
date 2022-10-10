@@ -14,6 +14,7 @@ import { types } from '@typegoose/typegoose';
 import { ImportCommand } from '../cli-command/index.js';
 import UserController from '../modules/user/user.controller.js';
 import OfferController from '../modules/offer/offer.controller.js';
+import CommentController from '../modules/comment/comment.controller.js';
 
 const appContainer = new Container();
 
@@ -35,5 +36,6 @@ appContainer.bind<ImportCommand>(Component.ImportCommand).to(ImportCommand);
 appContainer.bind<ExceptionFilterInterface>(Component.ExceptionFilter).to(ExceptionFilter).inSingletonScope();
 appContainer.bind<ControllerInterface>(Component.UserController).to(UserController).inSingletonScope();
 appContainer.bind<ControllerInterface>(Component.OfferController).to(OfferController).inSingletonScope();
+appContainer.bind<ControllerInterface>(Component.CommentController).to(CommentController).inSingletonScope();
 
 export { appContainer };

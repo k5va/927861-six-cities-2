@@ -16,12 +16,14 @@ export default class Application {
     @inject(Component.ExceptionFilter) private exceptionFilter: ExceptionFilterInterface,
     @inject(Component.UserController) private userController: ControllerInterface,
     @inject(Component.OfferController) private offerController: ControllerInterface,
+    @inject(Component.CommentController) private commentController: ControllerInterface,
   )
   {}
 
   private initRoutes() {
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/offers', this.offerController.router);
+    this.expressApp.use('/comments', this.commentController.router);
   }
 
   private initMiddleware() {
