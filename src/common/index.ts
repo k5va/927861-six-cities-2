@@ -9,6 +9,7 @@ export { default as TSVFileWriter } from './file-writer/tsv-file-writer.js';
 export { LoggerInterface } from './logger/logger.interface.js';
 export { default as LoggerService } from './logger/logger.service.js';
 export { OfferGeneratorInterface } from './offer-generator/offer-generator.interface.js';
+export { default as OfferGenerator } from './offer-generator/offer-generator.js';
 export { ControllerInterface } from './controller/controller.interface.js';
 export { Controller } from './controller/controller.js';
 export { default as HttpError } from './errors/http-error.js';

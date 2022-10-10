@@ -19,8 +19,8 @@ export default class UserController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for UserController…');
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.create });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.checkStatus });
+    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.checkStatus });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/login', method: HttpMethod.Delete, handler: this.logout });
   }
@@ -64,7 +64,7 @@ export default class UserController extends Controller {
     );
   }
 
-  public async logout(req: Request, _res: Response): Promise<void> {
+  public async logout(_req: Request, _res: Response): Promise<void> {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
@@ -72,7 +72,7 @@ export default class UserController extends Controller {
     );
   }
 
-  public async checkStatus(req: Request, _res: Response): Promise<void> {
+  public async checkStatus(_req: Request, _res: Response): Promise<void> {
 
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
