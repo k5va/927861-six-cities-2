@@ -7,12 +7,14 @@ import CommentResponse from './response/comment.response.js';
 import { CommentServiceInterface } from './comment-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../utils/index.js';
+import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 
 @injectable()
 export default class CommentController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
+    @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
   ) {
     super(logger);
 
@@ -26,7 +28,7 @@ export default class CommentController extends Controller {
     res: Response,
   ): Promise<void> {
 
-    const comment = await this.commentService.create(body);
+    const comment = await this.offerService.addComment(body);
     if (!comment) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
