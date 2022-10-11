@@ -35,7 +35,7 @@ export default class Application {
   }
 
   private initExceptionFilters() {
-    this.expressApp.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
+    this.expressApp.use(this.exceptionFilter.catch);
   }
 
 

@@ -13,6 +13,7 @@ export default class ExceptionFilter implements ExceptionFilterInterface {
     @inject(Component.LoggerInterface) private logger: LoggerInterface
   ) {
     this.logger.info('Register ExceptionFilter');
+    this.catch = this.catch.bind(this);
   }
 
   private handleHttpError(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
@@ -30,10 +31,8 @@ export default class ExceptionFilter implements ExceptionFilterInterface {
   }
 
   public catch(error: Error | HttpError, req: Request, res: Response, next: NextFunction): void {
-    if (error instanceof HttpError) {
-      return this.handleHttpError(error, req, res, next);
-    }
-
-    this.handleOtherError(error, req, res, next);
+    return (error instanceof HttpError)
+      ? this.handleHttpError(error, req, res, next)
+      : this.handleOtherError(error, req, res, next);
   }
 }
