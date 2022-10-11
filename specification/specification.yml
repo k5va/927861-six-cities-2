@@ -12,10 +12,6 @@ tags:
     description: Действия с предложениями.
   - name: comments
     description: Действия с комментариями.
-  - name: favorites
-    description: Действия с избранными предложениями.
-  - name: premium
-    description: Действия с премиальными предложениями.
   - name: users
     description: Действия с пользователем.
 paths:
@@ -216,6 +212,127 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthErrorMessage'
 
+  /offers/favorites:
+    get:
+      tags:
+        - offers
+      summary: Получение списка избранных предложений
+      description: Сервис возвращает все предложения, добавленные в избранное. Ресурс доступен
+        только авторизованным клиентам.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+
+      responses:
+        "200":
+          description: Список избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/shortOffer'
+                    - type: object
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
+
+  /offers/favorites/{offerId}:
+     post:
+      tags:
+        - offers
+      summary: Добавление и удаление предложения в/из избранного
+      description: Сервис предоставляет ресурс для добавления и удаления любого предложения в/из
+        списка избранных предложений. Ресурс доступен только авторизованным клиентам.
+      parameters:
+        - name: X-Token
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: ID предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+        - name: action
+          in: query
+          description: тип действия 1 - добавить / 0 - удалить из избранных
+          required: true
+          schema:
+            type: number
+            example: 1
+
+      responses:
+        "200":
+          description: Статус избранного обновлен. Обновленный объект предложения.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "404":
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthErrorMessage'
+
+  /offers/premium/{cityId}:
+     get:
+      tags:
+        - offers
+      summary: Премиальные предложения для города
+      description: Сервис предоставляет ресурс для получения списка премиальных предложений.
+        Премиальное предложение — предложение с флагом «Premium». Сервис возвращает не больше 3
+        предложений, отсортированных по дате публикации (по убыванию)
+      parameters:
+        - name: cityId
+          in: path
+          description: ID города
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+
+      responses:
+        "200":
+          description: Список предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/shortOffer'
+                    - type: object
+        "404":
+          description: Ошибка данных, нет такого города.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundErrorMessage'
+
   /comments/{offerId}:
      post:
       tags:
@@ -270,7 +387,7 @@ paths:
      get:
       tags:
         - comments
-      summary: Получение списока комментариев для предложения
+      summary: Получение списка комментариев для предложения
       description: Сервис всегда возвращает список из 50 (или меньше) последних комментариев.
         Комментарии отсортированы по дате публикации (по убыванию). Сначала новые, потом старые.
       parameters:
@@ -296,127 +413,6 @@ paths:
                     - type: object
         "404":
           description: Предложение не найдено
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
-
-  /favorites:
-    get:
-      tags:
-        - favorites
-      summary: Получение списка избранных предложений
-      description: Сервис возвращает все предложения, добавленные в избранное. Ресурс доступен
-        только авторизованным клиентам.
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-
-      responses:
-        "200":
-          description: Список избранных предложений.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  allOf:
-                    - $ref: '#/components/schemas/shortOffer'
-                    - type: object
-        "401":
-          description: Пользователь не авторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
-
-  /favorites/{offerId}:
-     post:
-      tags:
-        - favorites
-      summary: Добавление и удаление предложения в/из избранного
-      description: Сервис предоставляет ресурс для добавления и удаления любого предложения в/из
-        списка избранных предложений. Ресурс доступен только авторизованным клиентам.
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-        - name: offerId
-          in: path
-          description: ID предложения
-          required: true
-          schema:
-            type: string
-            example: 633041890aa1e923453c2957
-        - name: action
-          in: query
-          description: тип действия 1 - добавить / 0 - удалить из избранных
-          required: true
-          schema:
-            type: number
-            example: 1
-
-      responses:
-        "200":
-          description: Статус избранного обновлен. Обновленный объект предложения.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/offer'
-        "404":
-          description: Предложение не найдено
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
-        "401":
-          description: Пользователь не авторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
-
-  /premium/{cityId}:
-     get:
-      tags:
-        - premium
-      summary: Премиальные предложения для города
-      description: Сервис предоставляет ресурс для получения списка премиальных предложений.
-        Премиальное предложение — предложение с флагом «Premium». Сервис возвращает не больше 3
-        предложений, отсортированных по дате публикации (по убыванию)
-      parameters:
-        - name: cityId
-          in: path
-          description: ID города
-          required: true
-          schema:
-            type: string
-            example: 633041890aa1e923453c2957
-
-      responses:
-        "200":
-          description: Список предложений.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  allOf:
-                    - $ref: '#/components/schemas/shortOffer'
-                    - type: object
-        "404":
-          description: Ошибка данных, нет такого города.
           content:
             application/json:
               schema:
