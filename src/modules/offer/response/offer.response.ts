@@ -33,6 +33,9 @@ export default class OfferResponse {
   public rating!: number;
 
   @Expose()
+  public commentCount!: number;
+
+  @Expose()
   public type!: OfferType;
 
   @Expose()
