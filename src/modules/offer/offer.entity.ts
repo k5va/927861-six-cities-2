@@ -1,5 +1,5 @@
 import typegoose, {getModelForClass, defaultClasses, Ref} from '@typegoose/typegoose';
-import { Bedrooms, MaxAdults, Price, Rating, TitleLength, DescriptionLength } from '../../const/index.js';
+import { Bedrooms, MaxAdults, Price, TitleLength, DescriptionLength } from '../../const/index.js';
 import { OfferType } from '../../types/index.js';
 import { CityEntity } from '../city/city.entity.js';
 import { GoodEntity } from '../good/good.entity.js';
@@ -42,7 +42,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: false })
   public isPremium!: boolean;
 
-  @prop({ required: true, min: Rating.Min, max: Rating.Max })
+  @prop({ required: true, default: 0 })
   public rating!: number;
 
   @prop({ required: true, type: () => String, enum: OfferType })
@@ -69,7 +69,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public latitude!: number;
 
-  @prop({default: 0})
+  @prop({ default: 0 })
   public commentCount!: number;
 }
 

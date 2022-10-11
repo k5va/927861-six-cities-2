@@ -11,7 +11,6 @@ type Offer = {
   images: string[];
   isFavorite: boolean;
   isPremium: boolean;
-  rating: number;
   type: OfferType;
   bedrooms: number;
   maxAdults: number;

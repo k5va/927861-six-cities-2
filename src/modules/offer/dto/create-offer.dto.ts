@@ -9,7 +9,6 @@ export default class CreateOfferDto {
   public images!: string[];
   public isFavorite!: boolean;
   public isPremium!: boolean;
-  public rating!: number;
   public type!: OfferType;
   public bedrooms!: number;
   public maxAdults!: number;

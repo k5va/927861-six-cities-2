@@ -10,7 +10,7 @@ const LIST_SPLITTER = ';';
  */
 export const createOffer = (line: string): Offer => {
   const [title, description, publishDate, city, previewImage, images, isFavorite,
-    isPremium, rating, type, bedrooms, maxAdults, price, goods, name, email,
+    isPremium, type, bedrooms, maxAdults, price, goods, name, email,
     avatarUrl, password, isPro, latitude, longitude] = line.split(DATA_SPLITTER);
 
   return ({
@@ -22,7 +22,6 @@ export const createOffer = (line: string): Offer => {
     images: images.split(LIST_SPLITTER),
     isFavorite: Boolean(isFavorite),
     isPremium: Boolean(isPremium),
-    rating: Number(rating),
     type: type as OfferType,
     bedrooms: Number(bedrooms),
     maxAdults: Number(maxAdults),

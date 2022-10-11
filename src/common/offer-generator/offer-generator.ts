@@ -1,4 +1,4 @@
-import { Bedrooms, MaxAdults, Price, Rating } from '../../const/index.js';
+import { Bedrooms, MaxAdults, Price } from '../../const/index.js';
 import { MockData } from '../../types/index.js';
 import { getRandomBoolean, getRandomItem, getRandomItems, getRandomNumber }
   from '../../utils/index.js';
@@ -33,7 +33,6 @@ export default class OfferGenerator implements OfferGeneratorInterface {
       const images = getRandomItems(this.mockData.images).join(OfferGenerator.ITEMS_SPLITTER);
       const isFavorite = getRandomBoolean();
       const isPremium = getRandomBoolean();
-      const rating = getRandomNumber(Rating.Min, Rating.Max, Rating.Decimal);
       const type = getRandomItem(this.mockData.types);
       const bedrooms = getRandomNumber(Bedrooms.Min, Bedrooms.Max);
       const maxAdults = getRandomNumber(MaxAdults.Min, MaxAdults.Max);
@@ -49,7 +48,7 @@ export default class OfferGenerator implements OfferGeneratorInterface {
 
       yield [
         title, description, publishDate, city, previewImage, images,
-        isFavorite, isPremium, rating, type, bedrooms, maxAdults, price,
+        isFavorite, isPremium, type, bedrooms, maxAdults, price,
         goods, name, email, avatar, password, isPro, longitude, latitude
       ].join(OfferGenerator.DATA_SPLITTER);
     }
