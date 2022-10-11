@@ -9,6 +9,8 @@ import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
+import { FavoritesAction } from './offer.const.js';
+import { OfferEntity } from './offer.entity.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -44,13 +46,7 @@ export default class OfferController extends Controller {
   ): Promise<void> {
 
     const offer = await this.offerService.update(params.offerId, body);
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${params.offerId}» doesn't exist.`,
-        'OfferController'
-      );
-    }
+    this.checkOfferPresence(params.offerId, offer);
 
     this.ok(res, fillDTO(OfferResponse, offer));
   }
@@ -58,13 +54,7 @@ export default class OfferController extends Controller {
   public async delete({params}: Request, res: Response): Promise<void> {
 
     const offer = await this.offerService.delete(params.offerId);
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${params.offerId}» doesn't exist.`,
-        'OfferController'
-      );
-    }
+    this.checkOfferPresence(params.offerId, offer);
 
     this.noContent(res);
   }
@@ -81,34 +71,29 @@ export default class OfferController extends Controller {
   }
 
   public async setFavorites(
-    {params, query}: Request<Record<string, string>, Record<string, unknown>,
+    {params, query, headers}: Request<Record<string, string>, Record<string, unknown>,
     Record<string, unknown>>,
     res: Response,
   ): Promise<void> {
 
-    const userId = '633041890aa1e923453c2947'; // TODO: temporary
-    const action = query.action ? Number(query.action) : 0; // TODO: Add to consts
+    const userId = headers['x-userId'] as string; // TODO: temporary!
+    const {offerId} = params;
+    const action = query.action ? Number(query.action) : FavoritesAction.Remove;
 
     let offer;
-    if (action === 1) { // TODO: Add to consts
-      offer = await this.offerService.addToFavorites(params.offerId, userId);
+    if (action === FavoritesAction.Add) {
+      offer = await this.offerService.addToFavorites(offerId, userId);
     } else {
-      offer = await this.offerService.removeFromFavorites(params.offerId, userId);
+      offer = await this.offerService.removeFromFavorites(offerId, userId);
     }
 
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${params.offerId}» doesn't exist.`,
-        'OfferController'
-      );
-    }
+    this.checkOfferPresence(offerId, offer);
 
     this.ok(res, fillDTO(OfferShortResponse, offer));
   }
 
-  public async getFavorites(_req: Request, res: Response): Promise<void> {
-    const userId = '633041890aa1e923453c2947'; // TODO: temporary
+  public async getFavorites({headers}: Request, res: Response): Promise<void> {
+    const userId = headers['x-userId'] as string; // TODO: temporary!
     const offers = await this.offerService.findFavoritesByUser(userId);
     this.ok(res, fillDTO(OfferShortResponse, offers));
   }
@@ -123,15 +108,18 @@ export default class OfferController extends Controller {
 
   public async getDetails({params}: Request, res: Response): Promise<void> {
     const offer = await this.offerService.findById(params.offerId);
+    this.checkOfferPresence(params.offerId, offer);
 
+    this.ok(res, fillDTO(OfferResponse, offer));
+  }
+
+  private checkOfferPresence(offerId: string, offer: OfferEntity | null): void {
     if (!offer) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Offer with id «${params.offerId}» doesn't exist.`,
+        `Offer with id «${offerId}» doesn't exist.`,
         'OfferController'
       );
     }
-
-    this.ok(res, fillDTO(OfferResponse, offer));
   }
 }
