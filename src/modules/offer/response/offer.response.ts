@@ -15,7 +15,7 @@ export default class OfferResponse {
   public publishDate!: Date;
 
   @Expose()
-  public city!: City;
+  public cityId!: City;
 
   @Expose()
   public previewImage!: string;
@@ -51,7 +51,7 @@ export default class OfferResponse {
   public goods!: string[];
 
   @Expose()
-  public host!: User;
+  public hostId!: User;
 
   @Expose()
   public longitude!: number;

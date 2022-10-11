@@ -9,7 +9,6 @@ import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
-import { FavoritesAction } from './offer.const.js';
 import { OfferEntity } from './offer.entity.js';
 
 @injectable()
@@ -26,9 +25,6 @@ export default class OfferController extends Controller {
     this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.getDetails });
     this.addRoute({ path: '/:offerId', method: HttpMethod.Put, handler: this.update });
     this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
-    this.addRoute({ path: '/favorites', method: HttpMethod.Get, handler: this.getFavorites });
-    this.addRoute({ path: '/favorites/:offerId', method: HttpMethod.Post, handler: this.setFavorites });
-    this.addRoute({ path: '/premiums/:cityId', method: HttpMethod.Get, handler: this.getPremiums });
   }
 
   public async create(
@@ -66,47 +62,14 @@ export default class OfferController extends Controller {
   ): Promise<void> {
 
     const count = query.count ? Number(query.count) : undefined;
+    this.logger.info(`Getting offers max count ${count}`);
     const offers = await this.offerService.find(count);
     this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 
-  public async setFavorites(
-    {params, query, headers}: Request<Record<string, string>, Record<string, unknown>,
-    Record<string, unknown>>,
-    res: Response,
-  ): Promise<void> {
-
-    const userId = headers['x-userId'] as string; // TODO: temporary!
-    const {offerId} = params;
-    const action = query.action ? Number(query.action) : FavoritesAction.Remove;
-
-    let offer;
-    if (action === FavoritesAction.Add) {
-      offer = await this.offerService.addToFavorites(offerId, userId);
-    } else {
-      offer = await this.offerService.removeFromFavorites(offerId, userId);
-    }
-
-    this.checkOfferPresence(offerId, offer);
-
-    this.ok(res, fillDTO(OfferShortResponse, offer));
-  }
-
-  public async getFavorites({headers}: Request, res: Response): Promise<void> {
-    const userId = headers['x-userId'] as string; // TODO: temporary!
-    const offers = await this.offerService.findFavoritesByUser(userId);
-    this.ok(res, fillDTO(OfferShortResponse, offers));
-  }
-
-  public async getPremiums(
-    {params}: Request,
-    res: Response): Promise<void> {
-
-    const offers = await this.offerService.findPremiumByCity(params.cityId);
-    this.ok(res, fillDTO(OfferShortResponse, offers));
-  }
-
   public async getDetails({params}: Request, res: Response): Promise<void> {
+    this.logger.info(`Getting details for offer ${params.offerId}`);
+
     const offer = await this.offerService.findById(params.offerId);
     this.checkOfferPresence(params.offerId, offer);
 

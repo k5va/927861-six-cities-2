@@ -13,3 +13,8 @@ export { CommentEntity, CommentModel } from './comment/comment.entity.js';
 export { UserServiceInterface } from './user/user-service.interface.js';
 export { default as UserService } from './user/user.service.js';
 export { UserEntity, UserModel } from './user/user.entity.js';
+export { default as OfferController } from './offer/offer.controller.js';
+export { default as FavoritesController } from './offer/favorites.controller.js';
+export { default as PremiumsController } from './offer/premiums.controller.js';
+export { default as UserController } from './user/user.controller.js';
+export { default as CommentController } from './comment/comment.controller.js';

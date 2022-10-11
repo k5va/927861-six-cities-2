@@ -15,6 +15,8 @@ const Component = {
   CommentModel: Symbol.for('CommentModel'),
   ImportCommand: Symbol.for('ImportCommand'),
   OfferController: Symbol.for('OfferController'),
+  FavoritesController: Symbol.for('FavoritesController'),
+  PremiumsController: Symbol.for('PremiumsController'),
   UserController: Symbol.for('UsersController'),
   CommentController: Symbol.for('CommentsController'),
   ExceptionFilter: Symbol.for('ExceptionFilter'),

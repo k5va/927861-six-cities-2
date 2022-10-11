@@ -16,6 +16,8 @@ export default class Application {
     @inject(Component.ExceptionFilter) private exceptionFilter: ExceptionFilterInterface,
     @inject(Component.UserController) private userController: ControllerInterface,
     @inject(Component.OfferController) private offerController: ControllerInterface,
+    @inject(Component.FavoritesController) private favoritesController: ControllerInterface,
+    @inject(Component.PremiumsController) private premiumsController: ControllerInterface,
     @inject(Component.CommentController) private commentController: ControllerInterface,
   )
   {}
@@ -23,6 +25,8 @@ export default class Application {
   private initRoutes() {
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/offers', this.offerController.router);
+    this.expressApp.use('/favorites', this.favoritesController.router);
+    this.expressApp.use('/premiums', this.premiumsController.router);
     this.expressApp.use('/comments', this.commentController.router);
   }
 
