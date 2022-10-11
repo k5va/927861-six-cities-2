@@ -212,7 +212,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthErrorMessage'
 
-  /offers/favorites:
+  /favorites:
     get:
       tags:
         - offers
@@ -247,7 +247,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthErrorMessage'
 
-  /offers/favorites/{offerId}:
+  /favorites/{offerId}:
      post:
       tags:
         - offers
@@ -297,7 +297,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthErrorMessage'
 
-  /offers/premium/{cityId}:
+  /premium/{cityId}:
      get:
       tags:
         - offers
@@ -627,15 +627,15 @@ components:
           type: boolean
           example: true
 
-        rating:
-          type: number
-          example: 4.5.
-
         type:
           type: string
-          example: apartment.
+          example: apartment
 
         bedrooms:
+          type: number
+          example: 4
+
+        maxAdults:
           type: number
           example: 4
 
@@ -649,7 +649,7 @@ components:
             type: string
             example: 633041890aa1e923453c294c
 
-        host:
+        hostId:
           type: string
           example: 633041890aa1e923453c294f
 
