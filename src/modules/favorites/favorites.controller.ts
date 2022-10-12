@@ -2,12 +2,12 @@ import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
-import { OfferServiceInterface } from './offer-service.interface.js';
+import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../utils/index.js';
-import OfferShortResponse from './response/offer-short.response.js';
-import { FavoritesAction } from './offer.const.js';
-import { OfferEntity } from './offer.entity.js';
+import OfferShortResponse from '../offer/response/offer-short.response.js';
+import { FavoritesAction } from './favorites.const.js';
+import { OfferEntity } from '../offer/offer.entity.js';
 
 @injectable()
 export default class FavoritesController extends Controller {
