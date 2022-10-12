@@ -1,5 +1,5 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface } from '../../common/index.js';
+import { Controller, LoggerInterface, ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -17,7 +17,12 @@ export default class PremiumsController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for PremiumsController…');
-    this.addRoute({ path: '/:cityId', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({
+      path: '/:cityId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('cityId')]
+    });
   }
 
   public async index(

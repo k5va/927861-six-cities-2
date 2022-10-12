@@ -1,5 +1,6 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
+import { Controller, LoggerInterface, HttpError,
+  ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -21,7 +22,12 @@ export default class FavoritesController extends Controller {
 
     this.logger.info('Registering routes for FavoritesController…');
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Post, handler: this.update });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Post,
+      handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async update(

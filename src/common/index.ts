@@ -15,3 +15,4 @@ export { Controller } from './controller/controller.js';
 export { default as HttpError } from './errors/http-error.js';
 export { ExceptionFilterInterface } from './errors/exception-filter.interface.js';
 export { default as ExceptionFilter } from './errors/exception-filter.js';
+export { default as ValidateObjectIdMiddleware } from './middleware/validate-objectid.middleware.js';

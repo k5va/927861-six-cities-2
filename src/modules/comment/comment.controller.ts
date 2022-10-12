@@ -1,5 +1,6 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
+import { Controller, LoggerInterface, HttpError,
+  ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -21,7 +22,12 @@ export default class CommentController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for CommentController…');
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
   }
 
