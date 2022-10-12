@@ -1,6 +1,6 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, HttpError,
-  ValidateObjectIdMiddleware} from '../../common/index.js';
+  ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -23,7 +23,12 @@ export default class OfferController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for OfferController…');
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+    });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({
       path: '/:offerId',
@@ -33,9 +38,12 @@ export default class OfferController extends Controller {
     });
     this.addRoute({
       path: '/:offerId',
-      method: HttpMethod.Put,
+      method: HttpMethod.Patch,
       handler: this.update,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDto)
+      ]
     });
     this.addRoute({
       path: '/:offerId',
