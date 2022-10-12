@@ -1,3 +1,4 @@
+import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
@@ -8,6 +9,7 @@ import { fillDTO } from '../../utils/index.js';
 import OfferShortResponse from '../offer/response/offer-short.response.js';
 import { FavoritesAction } from './favorites.const.js';
 import { OfferEntity } from '../offer/offer.entity.js';
+import { UpdateParams } from './favorites.types.js';
 
 @injectable()
 export default class FavoritesController extends Controller {
@@ -18,13 +20,12 @@ export default class FavoritesController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for FavoritesController…');
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.getFavorites });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Post, handler: this.setFavorites });
+    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({ path: '/:offerId', method: HttpMethod.Post, handler: this.update });
   }
 
-  public async setFavorites(
-    {params, query, headers}: Request<Record<string, string>, Record<string, unknown>,
-    Record<string, unknown>>,
+  public async update(
+    {params, query, headers}: Request<core.ParamsDictionary | UpdateParams>,
     res: Response,
   ): Promise<void> {
 
@@ -44,7 +45,7 @@ export default class FavoritesController extends Controller {
     this.ok(res, fillDTO(OfferShortResponse, offer));
   }
 
-  public async getFavorites({headers}: Request, res: Response): Promise<void> {
+  public async index({headers}: Request, res: Response): Promise<void> {
     const userId = headers['x-userid'] as string; // TODO: temporary!
 
     this.logger.info(`Getting favorites for userid ${userId} `);
