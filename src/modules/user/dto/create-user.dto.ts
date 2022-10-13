@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Length, IsBoolean, IsOptional } from 'class-validator';
+import { IsEmail, IsString, Length, IsBoolean } from 'class-validator';
 import { PasswordLength, UserNameLength } from '../../../const/index.js';
 
 export default class CreateUserDto {
@@ -22,6 +22,6 @@ export default class CreateUserDto {
   @IsBoolean({ message: 'isPro must be boolean'})
   public isPro!: boolean;
 
-  @IsOptional()
-  public avatarUrl?: string;
+  @IsString({message: 'avatarUrl is required'})
+  public avatarUrl!: string;
 }

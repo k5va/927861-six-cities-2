@@ -29,7 +29,6 @@ Content-Type: application/json
   "latitude": 53.550341
 }
 
-
 ###
 # get offers
 GET http://localhost:3000/offers?count=5 HTTP/1.1
