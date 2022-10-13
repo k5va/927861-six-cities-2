@@ -1,6 +1,7 @@
-import {User} from '../../types/index.js';
+import { User } from '../../types/index.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/index.js';
+import { UserNameLength } from '../../const/index.js';
 
 const {prop, modelOptions} = typegoose;
 
@@ -22,7 +23,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.isPro = data.isPro;
   }
 
-  @prop({ required: true })
+  @prop({ required: true, minlength: UserNameLength.Min, maxlength: UserNameLength.Max })
   public name: string;
 
   @prop({ unique: true, required: true })
