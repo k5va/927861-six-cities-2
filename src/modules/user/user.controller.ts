@@ -1,4 +1,5 @@
-import { Controller, LoggerInterface, ConfigInterface, HttpError } from '../../common/index.js';
+import { Controller, LoggerInterface, ConfigInterface,
+  HttpError, ValidateDtoMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -19,7 +20,12 @@ export default class UserController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for UserController…');
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
+    });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.checkStatus });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/login', method: HttpMethod.Delete, handler: this.logout });
@@ -44,8 +50,7 @@ export default class UserController extends Controller {
   }
 
   public async login(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
-    _res: Response,
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>
   ): Promise<void> {
     const existingUser = await this.userService.findByEmail(body.email);
 
@@ -64,7 +69,7 @@ export default class UserController extends Controller {
     );
   }
 
-  public async logout(_req: Request, _res: Response): Promise<void> {
+  public async logout(): Promise<void> {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
@@ -72,7 +77,7 @@ export default class UserController extends Controller {
     );
   }
 
-  public async checkStatus(_req: Request, _res: Response): Promise<void> {
+  public async checkStatus(): Promise<void> {
 
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,

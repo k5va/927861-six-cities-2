@@ -1,4 +1,7 @@
-import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
+import * as core from 'express-serve-static-core';
+import { Controller, LoggerInterface, HttpError,
+  ValidateObjectIdMiddleware, ValidateDtoMiddleware,
+  DocumentExistsMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -8,6 +11,7 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../utils/index.js';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
+import { IndexParams } from './comment.types.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -19,8 +23,21 @@ export default class CommentController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for CommentController…');
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+    });
   }
 
   public async create(
@@ -41,8 +58,7 @@ export default class CommentController extends Controller {
   }
 
   public async index(
-    {params}: Request<Record<string, string>, Record<string, unknown>,
-    Record<string, unknown>>,
+    {params}: Request<core.ParamsDictionary | IndexParams>,
     res: Response,
   ): Promise<void> {
 

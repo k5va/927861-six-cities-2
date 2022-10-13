@@ -1,4 +1,6 @@
-import { Controller, LoggerInterface, HttpError } from '../../common/index.js';
+import * as core from 'express-serve-static-core';
+import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware, DocumentExistsMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -9,7 +11,7 @@ import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
-import { OfferEntity } from './offer.entity.js';
+import { DeleteParams, IndexQuery, ShowParams, UpdateParams } from './offer.types.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -20,11 +22,41 @@ export default class OfferController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for OfferController…');
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)]
+    });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.getDetails });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Put, handler: this.update });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
   }
 
   public async create(
@@ -37,52 +69,40 @@ export default class OfferController extends Controller {
   }
 
   public async update(
-    {body, params}: Request<Record<string, string>, Record<string, unknown>, UpdateOfferDto>,
+    {body, params}: Request<core.ParamsDictionary | UpdateParams, Record<string, unknown>, UpdateOfferDto>,
     res: Response,
   ): Promise<void> {
 
     const offer = await this.offerService.update(params.offerId, body);
-    this.checkOfferPresence(params.offerId, offer);
-
     this.ok(res, fillDTO(OfferResponse, offer));
   }
 
-  public async delete({params}: Request, res: Response): Promise<void> {
+  public async delete(
+    {params}: Request<core.ParamsDictionary | DeleteParams>,
+    res: Response
+  ): Promise<void> {
 
-    const offer = await this.offerService.delete(params.offerId);
-    this.checkOfferPresence(params.offerId, offer);
-
+    await this.offerService.delete(params.offerId);
     this.noContent(res);
   }
 
   public async index(
-    {query}: Request<Record<string, unknown>, Record<string, unknown>,
-    Record<string, unknown>>,
+    {query}: Request<unknown, unknown, unknown, IndexQuery>,
     res: Response,
   ): Promise<void> {
 
-    const count = query.count ? Number(query.count) : undefined;
+    const count = query.count ? query.count : undefined;
     this.logger.info(`Getting offers max count ${count}`);
     const offers = await this.offerService.find(count);
     this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 
-  public async getDetails({params}: Request, res: Response): Promise<void> {
+  public async show(
+    {params}: Request<core.ParamsDictionary | ShowParams>,
+    res: Response
+  ): Promise<void> {
     this.logger.info(`Getting details for offer ${params.offerId}`);
-
     const offer = await this.offerService.findById(params.offerId);
-    this.checkOfferPresence(params.offerId, offer);
-
     this.ok(res, fillDTO(OfferResponse, offer));
-  }
-
-  private checkOfferPresence(offerId: string, offer: OfferEntity | null): void {
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${offerId}» doesn't exist.`,
-        'OfferController'
-      );
-    }
   }
 }
