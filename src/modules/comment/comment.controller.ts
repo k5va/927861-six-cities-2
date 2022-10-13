@@ -1,6 +1,7 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, HttpError,
-  ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../common/index.js';
+  ValidateObjectIdMiddleware, ValidateDtoMiddleware,
+  DocumentExistsMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -26,7 +27,10 @@ export default class CommentController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
     });
     this.addRoute({
       path: '/',

@@ -1,6 +1,6 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface, HttpError,
-  ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../common/index.js';
+import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware, DocumentExistsMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -11,7 +11,6 @@ import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
-import { OfferEntity } from './offer.entity.js';
 import { DeleteParams, IndexQuery, ShowParams, UpdateParams } from './offer.types.js';
 
 @injectable()
@@ -34,7 +33,10 @@ export default class OfferController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
     });
     this.addRoute({
       path: '/:offerId',
@@ -42,14 +44,18 @@ export default class OfferController extends Controller {
       handler: this.update,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(UpdateOfferDto)
+        new ValidateDtoMiddleware(UpdateOfferDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
     });
   }
 
@@ -68,8 +74,6 @@ export default class OfferController extends Controller {
   ): Promise<void> {
 
     const offer = await this.offerService.update(params.offerId, body);
-    this.checkOfferPresence(params.offerId, offer);
-
     this.ok(res, fillDTO(OfferResponse, offer));
   }
 
@@ -78,9 +82,7 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
 
-    const offer = await this.offerService.delete(params.offerId);
-    this.checkOfferPresence(params.offerId, offer);
-
+    await this.offerService.delete(params.offerId);
     this.noContent(res);
   }
 
@@ -100,20 +102,7 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     this.logger.info(`Getting details for offer ${params.offerId}`);
-
     const offer = await this.offerService.findById(params.offerId);
-    this.checkOfferPresence(params.offerId, offer);
-
     this.ok(res, fillDTO(OfferResponse, offer));
-  }
-
-  private checkOfferPresence(offerId: string, offer: OfferEntity | null): void {
-    if (!offer) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${offerId}» doesn't exist.`,
-        'OfferController'
-      );
-    }
   }
 }
