@@ -29,4 +29,8 @@ export default class CityService implements CityServiceInterface {
     const good = await this.findByName(dto.name);
     return good ? good : this.create(dto);
   }
+
+  public async exists(cityId: string): Promise<boolean> {
+    return (await this.cityModel.exists({_id: cityId})) !== null;
+  }
 }
