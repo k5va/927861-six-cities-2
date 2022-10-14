@@ -1,5 +1,6 @@
 import { Controller, LoggerInterface, ConfigInterface,
-  HttpError, ValidateDtoMiddleware } from '../../common/index.js';
+  HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware,
+  DocumentExistsMiddleware, UploadFileMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -27,6 +28,16 @@ export default class UserController extends Controller {
       middlewares: [new ValidateDtoMiddleware(CreateUserDto)]
     });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.checkStatus });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
+      ]
+    });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
     this.addRoute({ path: '/login', method: HttpMethod.Delete, handler: this.logout });
   }
@@ -84,5 +95,9 @@ export default class UserController extends Controller {
       'Not implemented',
       'UserController',
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {filepath: req.file?.path});
   }
 }
