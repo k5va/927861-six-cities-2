@@ -42,9 +42,8 @@ export default class OfferService implements OfferServiceInterface {
     return result;
   }
 
-  public async addComment(dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
-    const {offerId} = dto;
-    const comment = await this.commentService.create(dto);
+  public async addComment(offerId: string, dto: CreateCommentDto): Promise<DocumentType<CommentEntity>> {
+    const comment = await this.commentService.create(offerId, dto);
     const offerComments = await this.commentService.findAllByOfferId(offerId);
 
     const commentCount = offerComments?.length ?? 0;
