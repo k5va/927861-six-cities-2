@@ -1,5 +1,5 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface, HttpError,
+import { Controller, LoggerInterface,
   ValidateObjectIdMiddleware, ValidateDtoMiddleware,
   DocumentExistsMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
@@ -11,7 +11,7 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../utils/index.js';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
-import { IndexParams } from './comment.types.js';
+import { CreateParams, IndexParams } from './comment.types.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -33,27 +33,22 @@ export default class CommentController extends Controller {
       ]
     });
     this.addRoute({
-      path: '/',
+      path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateCommentDto)]
+      middlewares: [
+        new ValidateDtoMiddleware(CreateCommentDto),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
     });
   }
 
   public async create(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDto>,
+    {params, body}: Request<core.ParamsDictionary | CreateParams, Record<string, unknown>, CreateCommentDto>,
     res: Response,
   ): Promise<void> {
 
-    const comment = await this.offerService.addComment(body);
-    if (!comment) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id «${body.offerId}» doesn't exist.`,
-        'CommentController'
-      );
-    }
-
+    const comment = await this.offerService.addComment(params.offerId, body);
     this.send(res, StatusCodes.CREATED, fillDTO(CommentResponse, comment));
   }
 

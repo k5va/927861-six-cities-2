@@ -19,3 +19,4 @@ export { default as ExceptionFilter } from './errors/exception-filter.js';
 export { default as ValidateObjectIdMiddleware } from './middleware/validate-objectid.middleware.js';
 export { default as ValidateDtoMiddleware } from './middleware/validate-dto.middleware.js';
 export { default as DocumentExistsMiddleware } from './middleware/document-exists.middleware.js';
+export { default as UploadFileMiddleware } from './middleware/upload-file.middleware.js';

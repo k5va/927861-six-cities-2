@@ -478,6 +478,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/AuthErrorMessage'
 
+  /users/:userId/avatar:
+    post:
+      tags:
+        - users
+      summary: загрузка аватара пользователя
+      description: Загрузка аватара. Доступно только для зарегистрированных пользователей
+      responses:
+        "201":
+          description: Аватар загружен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarLoadedMessage'
+
   /users/login:
     post:
       tags:
@@ -859,3 +873,10 @@ components:
         error:
           type: string
           example: offer price should be of type number
+
+    AvatarLoadedMessage:
+      type: object
+      properties:
+        filepath:
+          type: string
+          example: upload/NX916d_kUb-mQn13IP2im.png

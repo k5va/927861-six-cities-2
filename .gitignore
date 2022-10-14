@@ -12,3 +12,4 @@ coverage
 /mocks/*.tsv
 *.env
 /mongodb/
+/upload/

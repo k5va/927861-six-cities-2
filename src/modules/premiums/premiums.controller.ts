@@ -1,5 +1,5 @@
 import * as core from 'express-serve-static-core';
-import { Controller, LoggerInterface, ValidateObjectIdMiddleware } from '../../common/index.js';
+import { Controller, DocumentExistsMiddleware, LoggerInterface, ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -7,12 +7,14 @@ import { OfferServiceInterface } from '../offer/offer-service.interface.js';
 import { fillDTO } from '../../utils/index.js';
 import OfferShortResponse from '../offer/response/offer-short.response.js';
 import { IndexParams } from './premiums.types.js';
+import { CityServiceInterface } from '../city/city-service.interface.js';
 
 @injectable()
 export default class PremiumsController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
+    @inject(Component.CityServiceInterface) private readonly cityService: CityServiceInterface,
   ) {
     super(logger);
 
@@ -21,7 +23,10 @@ export default class PremiumsController extends Controller {
       path: '/:cityId',
       method: HttpMethod.Get,
       handler: this.index,
-      middlewares: [new ValidateObjectIdMiddleware('cityId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('cityId'),
+        new DocumentExistsMiddleware(this.cityService, 'City', 'cityId'),
+      ]
     });
   }
 
