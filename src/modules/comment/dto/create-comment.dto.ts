@@ -15,7 +15,6 @@ export default class CreateCommentDto {
   @Max(Rating.Max, {message: `Maximum maxAdults is ${Rating.Max}`})
   public rating!: number;
 
-  @IsMongoId({message: 'userId must be a valid id'})
   public userId!: string;
 
   @IsMongoId({message: 'offerId must be a valid id'})
