@@ -41,7 +41,6 @@ export default class UserController extends Controller {
       ]
     });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/login', method: HttpMethod.Delete, handler: this.logout });
   }
 
   public async create(
@@ -83,14 +82,6 @@ export default class UserController extends Controller {
     );
 
     this.ok(res, fillDTO(LoggedInUserResponse, {...existingUser, token}));
-  }
-
-  public async logout(): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
   }
 
   public async checkStatus(): Promise<void> {
