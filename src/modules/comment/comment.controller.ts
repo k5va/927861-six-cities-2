@@ -44,11 +44,12 @@ export default class CommentController extends Controller {
   }
 
   public async create(
-    {params, body}: Request<core.ParamsDictionary | CreateParams, Record<string, unknown>, CreateCommentDto>,
+    {params, body, user}: Request<core.ParamsDictionary | CreateParams,
+    Record<string, unknown>, CreateCommentDto>,
     res: Response,
   ): Promise<void> {
 
-    const comment = await this.offerService.addComment(params.offerId, body);
+    const comment = await this.offerService.addComment(params.offerId, {...body, userId: user.id});
     this.send(res, StatusCodes.CREATED, fillDTO(CommentResponse, comment));
   }
 
