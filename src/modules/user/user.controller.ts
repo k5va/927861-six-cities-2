@@ -84,16 +84,19 @@ export default class UserController extends Controller {
     this.ok(res, fillDTO(LoggedInUserResponse, {...existingUser, token}));
   }
 
-  public async checkStatus(): Promise<void> {
+  public async checkStatus(
+    {user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    res: Response,): Promise<void> {
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+    if (user) {
+      const existingUser = this.userService.findById(user.id);
+      this.ok(res, existingUser);
+    } else {
+      this.send(res, StatusCodes.UNAUTHORIZED, null);
+    }
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
+  public async uploadAvatar(req: Request, res: Response): Promise<void> {
     this.created(res, {filepath: req.file?.path});
   }
 }
