@@ -86,13 +86,13 @@ export default class UserController extends Controller {
 
   public async checkStatus(
     {user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
-    res: Response,): Promise<void> {
+    res: Response): Promise<void> {
 
     if (user) {
       const existingUser = this.userService.findById(user.id);
-      this.ok(res, existingUser);
+      this.ok(res, fillDTO(UserResponse, existingUser));
     } else {
-      this.send(res, StatusCodes.UNAUTHORIZED, null);
+      throw new HttpError(StatusCodes.UNAUTHORIZED, 'Unauthorized', 'UserController');
     }
   }
 
