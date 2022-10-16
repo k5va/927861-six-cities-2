@@ -52,7 +52,6 @@ export default class CreateOfferDto {
   @IsMongoId({each: true, message: 'goods must be an array of valid ObjectId'})
   public goods!: string[];
 
-  @IsMongoId({message: 'hostId must be a valid id'})
   public hostId!: string;
 
   @IsNumber({}, {message: 'longitude must be a number'})
