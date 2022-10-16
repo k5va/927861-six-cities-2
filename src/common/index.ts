@@ -20,3 +20,4 @@ export { default as ValidateObjectIdMiddleware } from './middleware/validate-obj
 export { default as ValidateDtoMiddleware } from './middleware/validate-dto.middleware.js';
 export { default as DocumentExistsMiddleware } from './middleware/document-exists.middleware.js';
 export { default as UploadFileMiddleware } from './middleware/upload-file.middleware.js';
+export { default as AuthenticateMiddleware } from './middleware/authenticate.middleware.js';
