@@ -40,12 +40,13 @@ export default class FavoritesController extends Controller {
   }
 
   public async update(
-    {params, query, headers}: Request<core.ParamsDictionary | UpdateParams>,
+    {params, query, user}: Request<core.ParamsDictionary | UpdateParams>,
     res: Response,
   ): Promise<void> {
 
-    const userId = headers['x-userid'] as string; // TODO: temporary!
+    const {id: userId} = user;
     const {offerId} = params;
+
     const action = query.action ? Number(query.action) : FavoritesAction.Remove;
 
     let offer;
@@ -58,8 +59,8 @@ export default class FavoritesController extends Controller {
     this.ok(res, fillDTO(OfferShortResponse, offer));
   }
 
-  public async index({headers}: Request, res: Response): Promise<void> {
-    const userId = headers['x-userid'] as string; // TODO: temporary!
+  public async index({user}: Request, res: Response): Promise<void> {
+    const {id: userId} = user;
 
     this.logger.info(`Getting favorites for userid ${userId} `);
     const offers = await this.offerService.findFavoritesByUser(userId);
