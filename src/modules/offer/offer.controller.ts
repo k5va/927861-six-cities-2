@@ -1,6 +1,6 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
-  ValidateDtoMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware } from '../../common/index.js';
+  ValidateDtoMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware, HttpError } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -74,19 +74,27 @@ export default class OfferController extends Controller {
   }
 
   public async update(
-    {body, params}: Request<core.ParamsDictionary | UpdateParams, Record<string, unknown>, UpdateOfferDto>,
+    {body, params, user}: Request<core.ParamsDictionary | UpdateParams, Record<string, unknown>, UpdateOfferDto>,
     res: Response,
   ): Promise<void> {
 
-    const offer = await this.offerService.update(params.offerId, body);
+    const {id: userId} = user;
+    const {offerId} = params;
+
+    await this.checkUserOfferPermission(userId, offerId);
+    const offer = await this.offerService.update(offerId, body);
     this.ok(res, fillDTO(OfferResponse, offer));
   }
 
   public async delete(
-    {params}: Request<core.ParamsDictionary | DeleteParams>,
+    {params, user}: Request<core.ParamsDictionary | DeleteParams>,
     res: Response
   ): Promise<void> {
 
+    const {id: userId} = user;
+    const {offerId} = params;
+
+    await this.checkUserOfferPermission(userId, offerId);
     await this.offerService.delete(params.offerId);
     this.noContent(res);
   }
@@ -109,5 +117,16 @@ export default class OfferController extends Controller {
     this.logger.info(`Getting details for offer ${params.offerId}`);
     const offer = await this.offerService.findById(params.offerId);
     this.ok(res, fillDTO(OfferResponse, offer));
+  }
+
+  private async checkUserOfferPermission(userId: string, offerId: string): Promise<void> {
+
+    const offer = await this.offerService.findById(offerId);
+    if (userId !== offer?.hostId?.id) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        `User ${userId} is not allowed to update / delete offer ${offerId}`,
+        'OfferController');
+    }
   }
 }
