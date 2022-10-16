@@ -1,6 +1,6 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
-  DocumentExistsMiddleware} from '../../common/index.js';
+  DocumentExistsMiddleware, PrivateRouteMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -19,12 +19,20 @@ export default class FavoritesController extends Controller {
     super(logger);
 
     this.logger.info('Registering routes for FavoritesController…');
-    this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Get,
+      handler: this.index,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+      ]
+    });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]

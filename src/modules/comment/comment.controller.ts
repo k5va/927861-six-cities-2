@@ -1,7 +1,7 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface,
   ValidateObjectIdMiddleware, ValidateDtoMiddleware,
-  DocumentExistsMiddleware } from '../../common/index.js';
+  DocumentExistsMiddleware, PrivateRouteMiddleware} from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -37,6 +37,7 @@ export default class CommentController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateDtoMiddleware(CreateCommentDto),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ]
