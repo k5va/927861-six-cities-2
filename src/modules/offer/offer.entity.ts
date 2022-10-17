@@ -74,7 +74,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   setIsFavorite(userId: string) {
     this.isFavorite = userId
-      ? this.inFavorites.some((currentId) => currentId?.id === userId)
+      ? this.inFavorites.some((objectId) => objectId?.toString() === userId)
       : false;
   }
 }
