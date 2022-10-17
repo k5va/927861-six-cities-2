@@ -1,5 +1,8 @@
-import { Expose } from 'class-transformer';
-import { City, OfferType, User } from '../../../types/index.js';
+import { Expose, Type } from 'class-transformer';
+import { OfferType } from '../../../types/index.js';
+import CityResponse from '../../city/response/city.response.js';
+import GoodResponse from '../../good/response/good.response.js';
+import UserResponse from '../../user/response/user.response.js';
 
 export default class OfferResponse {
   @Expose()
@@ -14,8 +17,9 @@ export default class OfferResponse {
   @Expose()
   public publishDate!: Date;
 
-  @Expose()
-  public cityId!: City;
+  @Expose({ name: 'cityId'})
+  @Type(() => CityResponse)
+  public city!: CityResponse;
 
   @Expose()
   public previewImage!: string;
@@ -48,10 +52,12 @@ export default class OfferResponse {
   public price!: number;
 
   @Expose()
-  public goods!: string[];
+  @Type(() => GoodResponse)
+  public goods!: GoodResponse[];
 
-  @Expose()
-  public hostId!: User;
+  @Expose({ name: 'hostId'})
+  @Type(() => UserResponse)
+  public host!: UserResponse;
 
   @Expose()
   public longitude!: number;
