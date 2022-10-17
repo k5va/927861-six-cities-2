@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
-import { fillDTO, setIsOfferFavoriteOfUser } from '../../utils/index.js';
+import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
@@ -70,7 +70,8 @@ export default class OfferController extends Controller {
   ): Promise<void> {
 
     const offer = await this.offerService.create({...body, hostId: user.id});
-    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user.id, offer)));
+    offer?.setIsFavorite(user.id);
+    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, offer));
   }
 
   public async update(
@@ -83,7 +84,8 @@ export default class OfferController extends Controller {
 
     await this.checkUserOfferPermission(userId, offerId);
     const offer = await this.offerService.update(offerId, body);
-    this.ok(res, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user.id, offer)));
+    offer?.setIsFavorite(userId);
+    this.ok(res, fillDTO(OfferResponse, offer));
   }
 
   public async delete(
@@ -107,13 +109,8 @@ export default class OfferController extends Controller {
     const count = query.count ? query.count : undefined;
     this.logger.info(`Getting offers max count ${count}`);
     const offers = await this.offerService.find(count);
-    this.ok(
-      res,
-      fillDTO(
-        OfferShortResponse,
-        offers.forEach((offer) => setIsOfferFavoriteOfUser(user?.id, offer))
-      )
-    );
+    offers.forEach((offer) => offer.setIsFavorite(user?.id));
+    this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 
   public async show(
@@ -122,7 +119,8 @@ export default class OfferController extends Controller {
   ): Promise<void> {
     this.logger.info(`Getting details for offer ${params.offerId}`);
     const offer = await this.offerService.findById(params.offerId);
-    this.ok(res, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user?.id, offer)));
+    offer?.setIsFavorite(user?.id);
+    this.ok(res, fillDTO(OfferResponse, offer));
   }
 
   private async checkUserOfferPermission(userId: string, offerId: string): Promise<void> {

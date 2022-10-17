@@ -7,4 +7,3 @@ export { default as createSHA256 } from './create-sha-256.js';
 export { default as createErrorObject } from './create-error-object.js';
 export { default as fillDTO } from './fill-dto.js';
 export { default as createJWT } from './create-jwt.js';
-export { default as setIsOfferFavoriteOfUser } from './set-is-offer-favorite-of-user.js';

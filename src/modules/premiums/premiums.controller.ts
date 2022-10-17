@@ -5,7 +5,7 @@ import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
-import { fillDTO, setIsOfferFavoriteOfUser } from '../../utils/index.js';
+import { fillDTO } from '../../utils/index.js';
 import OfferShortResponse from '../offer/response/offer-short.response.js';
 import { IndexParams } from './premiums.types.js';
 import { CityServiceInterface } from '../city/city-service.interface.js';
@@ -36,9 +36,7 @@ export default class PremiumsController extends Controller {
     res: Response): Promise<void> {
 
     const offers = await this.offerService.findPremiumByCity(params.cityId);
-    this.ok(
-      res,
-      fillDTO(OfferShortResponse, offers.forEach((offer) => setIsOfferFavoriteOfUser(user?.id, offer)))
-    );
+    offers.forEach((offer) => offer.setIsFavorite(user?.id));
+    this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 }
