@@ -7,7 +7,7 @@ import { Request, Response } from 'express';
 import CreateOfferDto from './dto/create-offer.dto.js';
 import { OfferServiceInterface } from './offer-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
-import { fillDTO } from '../../utils/index.js';
+import { fillDTO, setIsOfferFavoriteOfUser } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
@@ -70,7 +70,7 @@ export default class OfferController extends Controller {
   ): Promise<void> {
 
     const offer = await this.offerService.create({...body, hostId: user.id});
-    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, offer));
+    this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user.id, offer)));
   }
 
   public async update(
@@ -83,7 +83,7 @@ export default class OfferController extends Controller {
 
     await this.checkUserOfferPermission(userId, offerId);
     const offer = await this.offerService.update(offerId, body);
-    this.ok(res, fillDTO(OfferResponse, offer));
+    this.ok(res, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user.id, offer)));
   }
 
   public async delete(
@@ -100,27 +100,32 @@ export default class OfferController extends Controller {
   }
 
   public async index(
-    {query}: Request<unknown, unknown, unknown, IndexQuery>,
+    {query, user}: Request<unknown, unknown, unknown, IndexQuery>,
     res: Response,
   ): Promise<void> {
 
     const count = query.count ? query.count : undefined;
     this.logger.info(`Getting offers max count ${count}`);
     const offers = await this.offerService.find(count);
-    this.ok(res, fillDTO(OfferShortResponse, offers));
+    this.ok(
+      res,
+      fillDTO(
+        OfferShortResponse,
+        offers.forEach((offer) => setIsOfferFavoriteOfUser(user?.id, offer))
+      )
+    );
   }
 
   public async show(
-    {params}: Request<core.ParamsDictionary | ShowParams>,
+    {params, user}: Request<core.ParamsDictionary | ShowParams>,
     res: Response
   ): Promise<void> {
     this.logger.info(`Getting details for offer ${params.offerId}`);
     const offer = await this.offerService.findById(params.offerId);
-    this.ok(res, fillDTO(OfferResponse, offer));
+    this.ok(res, fillDTO(OfferResponse, setIsOfferFavoriteOfUser(user?.id, offer)));
   }
 
   private async checkUserOfferPermission(userId: string, offerId: string): Promise<void> {
-
     const offer = await this.offerService.findById(offerId);
     if (userId !== offer?.hostId?.id) {
       throw new HttpError(

@@ -5,7 +5,7 @@ import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
 import { OfferServiceInterface } from '../offer/offer-service.interface.js';
-import { fillDTO } from '../../utils/index.js';
+import { fillDTO, setIsOfferFavoriteOfUser } from '../../utils/index.js';
 import OfferShortResponse from '../offer/response/offer-short.response.js';
 import { FavoritesAction } from './favorites.const.js';
 import { UpdateParams } from './favorites.types.js';
@@ -56,7 +56,7 @@ export default class FavoritesController extends Controller {
       offer = await this.offerService.removeFromFavorites(offerId, userId);
     }
     this.logger.info(`Offer with id ${offerId} updated favorites status ${action} by user ${userId}`);
-    this.ok(res, fillDTO(OfferShortResponse, offer));
+    this.ok(res, fillDTO(OfferShortResponse, setIsOfferFavoriteOfUser(userId, offer)));
   }
 
   public async index({user}: Request, res: Response): Promise<void> {
@@ -64,6 +64,12 @@ export default class FavoritesController extends Controller {
 
     this.logger.info(`Getting favorites for userid ${userId} `);
     const offers = await this.offerService.findFavoritesByUser(userId);
-    this.ok(res, fillDTO(OfferShortResponse, offers));
+    this.ok(
+      res,
+      fillDTO(
+        OfferShortResponse,
+        offers.forEach((offer) => setIsOfferFavoriteOfUser(userId, offer))
+      )
+    );
   }
 }
