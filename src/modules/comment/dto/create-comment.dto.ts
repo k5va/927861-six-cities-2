@@ -1,4 +1,4 @@
-import { IsDateString, IsMongoId, Max, MaxLength,
+import { IsDateString, Max, MaxLength,
   Min, MinLength, IsNumber } from 'class-validator';
 import { CommentLength, Rating } from '../../../const/index.js';
 
@@ -17,6 +17,5 @@ export default class CreateCommentDto {
 
   public userId!: string;
 
-  @IsMongoId({message: 'offerId must be a valid id'})
   public offerId!: string;
 }
