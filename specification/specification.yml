@@ -535,7 +535,7 @@ components:
           type: boolean
           example: true
 
-        avatarURL:
+        avatarUrl:
           type: string
           example: https://10.react.pages.academy/static/user.jpg
 
@@ -563,7 +563,7 @@ components:
           type: boolean
           example: true
 
-        avatarURL:
+        avatarUrl:
           type: string
           example: https://10.react.pages.academy/static/user.jpg
 
