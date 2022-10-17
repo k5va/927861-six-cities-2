@@ -517,28 +517,6 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
-  /users/logout:
-    delete:
-      tags:
-        - users
-      summary: Выход из закрытой части приложения
-      description: Если токен прошёл проверку, сервис завершает пользовательский сеанс (сессию).
-        В противном случае возвращает ошибку и соответствующий код состояния.
-      parameters:
-        - name: X-Token
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-
-      responses:
-        "204":
-          description: Сеанс работы пользователя завершен.
-        "400":
-          description: Ошибка запроса.
-
 components:
   schemas:
     createUser:
@@ -557,7 +535,7 @@ components:
           type: boolean
           example: true
 
-        avatarURL:
+        avatarUrl:
           type: string
           example: https://10.react.pages.academy/static/user.jpg
 
@@ -585,7 +563,7 @@ components:
           type: boolean
           example: true
 
-        avatarURL:
+        avatarUrl:
           type: string
           example: https://10.react.pages.academy/static/user.jpg
 

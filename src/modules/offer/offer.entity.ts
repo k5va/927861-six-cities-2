@@ -71,6 +71,12 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({ default: 0 })
   public commentCount!: number;
+
+  setIsFavorite(userId: string) {
+    this.isFavorite = userId
+      ? this.inFavorites.some((objectId) => objectId?.toString() === userId)
+      : false;
+  }
 }
 
 export const OfferModel = getModelForClass(OfferEntity);

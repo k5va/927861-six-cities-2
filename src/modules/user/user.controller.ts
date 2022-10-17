@@ -7,9 +7,11 @@ import { Request, Response } from 'express';
 import CreateUserDto from './dto/create-user.dto.js';
 import LoginUserDto from './dto/login-user.dto.js';
 import UserResponse from './response/user.response.js';
+import LoggedInUserResponse from './response/logged-in-user.response.js';
 import { UserServiceInterface } from './user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
-import { fillDTO } from '../../utils/index.js';
+import { createJWT, fillDTO } from '../../utils/index.js';
+import { JWT_ALGORITM } from './user.const.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -39,7 +41,6 @@ export default class UserController extends Controller {
       ]
     });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/login', method: HttpMethod.Delete, handler: this.logout });
   }
 
   public async create(
@@ -61,43 +62,43 @@ export default class UserController extends Controller {
   }
 
   public async login(
-    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>
+    {body}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    res: Response,
   ): Promise<void> {
-    const existingUser = await this.userService.findByEmail(body.email);
+    const existingUser = await this.userService.verifyUser(body, this.configService.get('SALT'));
 
     if (!existingUser) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
+        `User with email ${body.email} unauthorized.`,
         'UserController',
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
+    const token = await createJWT(
+      JWT_ALGORITM,
+      this.configService.get('JWT_SECRET'),
+      {email: existingUser.email, id: existingUser.id}
     );
+
+    this.ok(res, fillDTO(LoggedInUserResponse, {email: existingUser.email, token}));
   }
 
-  public async logout(): Promise<void> {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+  public async checkStatus(
+    {user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    res: Response): Promise<void> {
+
+    this.logger.info(`Checking user status for ${user.id}`);
+
+    if (user) {
+      const existingUser = await this.userService.findById(user.id);
+      this.ok(res, fillDTO(UserResponse, existingUser));
+    } else {
+      throw new HttpError(StatusCodes.UNAUTHORIZED, 'Unauthorized', 'UserController');
+    }
   }
 
-  public async checkStatus(): Promise<void> {
-
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
-  }
-
-  public async uploadAvatar(req: Request, res: Response) {
+  public async uploadAvatar(req: Request, res: Response): Promise<void> {
     this.created(res, {filepath: req.file?.path});
   }
 }

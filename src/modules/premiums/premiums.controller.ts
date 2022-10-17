@@ -1,5 +1,6 @@
 import * as core from 'express-serve-static-core';
-import { Controller, DocumentExistsMiddleware, LoggerInterface, ValidateObjectIdMiddleware } from '../../common/index.js';
+import { Controller, DocumentExistsMiddleware, LoggerInterface,
+  ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -31,10 +32,11 @@ export default class PremiumsController extends Controller {
   }
 
   public async index(
-    {params}: Request<core.ParamsDictionary | IndexParams>,
+    {params, user}: Request<core.ParamsDictionary | IndexParams>,
     res: Response): Promise<void> {
 
     const offers = await this.offerService.findPremiumByCity(params.cityId);
+    offers.forEach((offer) => offer.setIsFavorite(user?.id));
     this.ok(res, fillDTO(OfferShortResponse, offers));
   }
 }

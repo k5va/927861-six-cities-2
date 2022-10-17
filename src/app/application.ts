@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
-import { ConfigInterface, ControllerInterface, DatabaseInterface, ExceptionFilterInterface,
-  LoggerInterface } from '../common/index.js';
+import { AuthenticateMiddleware, ConfigInterface, ControllerInterface,
+  DatabaseInterface, ExceptionFilterInterface, LoggerInterface } from '../common/index.js';
 import { Component } from '../types/index.js';
 import { getURI } from '../utils/index.js';
 
@@ -33,6 +33,8 @@ export default class Application {
   private initMiddleware() {
     this.expressApp.use(express.json());
     this.expressApp.use('/upload', express.static(this.config.get('UPLOAD_DIRECTORY')));
+    const authenticateMiddleware = new AuthenticateMiddleware(this.config.get('JWT_SECRET'));
+    this.expressApp.use(authenticateMiddleware.execute.bind(authenticateMiddleware));
   }
 
   private initExceptionFilters() {

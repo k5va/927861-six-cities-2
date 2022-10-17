@@ -24,13 +24,13 @@ export default class OfferService implements OfferServiceInterface {
     const offer = await this.offerModel.create({...dto, inFavorites: dto.isFavorite ? [dto.hostId] : []});
     this.logger.info(`New Offer created: ${dto.title}`);
 
-    return offer.populate(['hostId', 'goods']);
+    return offer.populate(['hostId', 'goods', 'cityId']);
   }
 
   public async findById(id: string): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findById(id)
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
@@ -64,7 +64,7 @@ export default class OfferService implements OfferServiceInterface {
   public async update(id: string, dto: updateOfferDto): Promise<DocumentType<OfferEntity> | null> {
     return this.offerModel
       .findByIdAndUpdate(id, dto, { new: true })
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
@@ -73,7 +73,7 @@ export default class OfferService implements OfferServiceInterface {
       .findByIdAndUpdate(id, {'$addToSet': {
         inFavorites: userId,
       }})
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
@@ -82,7 +82,7 @@ export default class OfferService implements OfferServiceInterface {
       .findByIdAndUpdate(id, {'$pull': {
         inFavorites: userId,
       }})
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
@@ -90,7 +90,7 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .find()
       .limit(count)
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
@@ -99,14 +99,14 @@ export default class OfferService implements OfferServiceInterface {
       .find({cityId, isPremium: true})
       .sort({publishDate: 'descending'})
       .limit(PREMIUM_OFFER_COUNT)
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 
   public async findFavoritesByUser(userId: string): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
       .find({inFavorites: userId})
-      .populate(['hostId', 'goods'])
+      .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
 

@@ -1,5 +1,6 @@
-import { Expose } from 'class-transformer';
-import { City, OfferType } from '../../../types/index.js';
+import { Expose, Type } from 'class-transformer';
+import { OfferType } from '../../../types/index.js';
+import CityResponse from '../../city/response/city.response.js';
 
 export default class OfferShortResponse {
   @Expose()
@@ -11,8 +12,9 @@ export default class OfferShortResponse {
   @Expose()
   public publishDate!: Date;
 
-  @Expose()
-  public city!: City;
+  @Expose({ name: 'cityId'})
+  @Type(() => CityResponse)
+  public city!: CityResponse;
 
   @Expose()
   public previewImage!: string;

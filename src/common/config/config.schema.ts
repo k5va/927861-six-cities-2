@@ -12,6 +12,7 @@ export type ConfigSchema = {
   DB_PORT: number;
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
+  JWT_SECRET: string;
 }
 
 export const configSchema = convict<ConfigSchema>({
@@ -61,6 +62,12 @@ export const configSchema = convict<ConfigSchema>({
     doc: 'file upload directory name',
     format: String,
     env: 'UPLOAD_DIRECTORY',
+    default: 'null'
+  },
+  JWT_SECRET: {
+    doc: 'JWT secret for signiture',
+    format: String,
+    env: 'JWT_SECRET',
     default: 'null'
   },
 });
