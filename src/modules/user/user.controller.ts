@@ -81,15 +81,17 @@ export default class UserController extends Controller {
       {email: existingUser.email, id: existingUser.id}
     );
 
-    this.ok(res, fillDTO(LoggedInUserResponse, {...existingUser, token}));
+    this.ok(res, fillDTO(LoggedInUserResponse, {email: existingUser.email, token}));
   }
 
   public async checkStatus(
     {user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     res: Response): Promise<void> {
 
+    this.logger.info(`Checking user status for ${user.id}`);
+
     if (user) {
-      const existingUser = this.userService.findById(user.id);
+      const existingUser = await this.userService.findById(user.id);
       this.ok(res, fillDTO(UserResponse, existingUser));
     } else {
       throw new HttpError(StatusCodes.UNAUTHORIZED, 'Unauthorized', 'UserController');
