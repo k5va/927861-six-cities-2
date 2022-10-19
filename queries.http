@@ -32,7 +32,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsxQHRlc3QucnUiLCJpZCI6I
 ###
 # create offer
 POST http://localhost:3000/offers HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsxQHRlc3QucnUiLCJpZCI6IjYzNGNmYjJiZDZjMGVmNzk3Y2U0NDYwNSIsImlhdCI6MTY2NTk4OTkxMiwiZXhwIjoxNjY2MTYyNzEyfQ.wGy15K_s4j1xfKvM7WqtF8gH-lzgnQZWlRAtV3BoZaw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsxQHRlc3QucnUiLCJpZCI6IjYzNGNmYjJiZDZjMGVmNzk3Y2U0NDYwNSIsImlhdCI6MTY2NjE2NTMyMiwiZXhwIjoxNjY2MzM4MTIyfQ.dUYt38O1XOZ-EvD4lLJglI4VZmz1rx_ZdNU1a8HtrqI
 Content-Type: application/json
 
 {
