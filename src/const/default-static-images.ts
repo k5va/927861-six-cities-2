@@ -1,5 +1,5 @@
 const DEFAULT_STATIC_IMAGES = [
-  'default-avatar.jpg',
+  'default-avatar.png',
 ];
 
 export default DEFAULT_STATIC_IMAGES;
