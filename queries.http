@@ -7,10 +7,10 @@ POST http://localhost:3000/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "k1@test.ru",
+  "email": "k2@test.ru",
   "name": "Alexey",
   "isPro": true,
-  "avatarUrl": "https://10.react.pages.academy/static/user.jpg",
+  "avatarUrl": "user.jpg",
   "password": "123456"
 }
 
@@ -65,7 +65,6 @@ GET http://localhost:3000/offers?count=50 HTTP/1.1
 ###
 # get offer details
 GET http://localhost:3000/offers/634d243a8c5119536a376d0a HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsxQHRlc3QucnUiLCJpZCI6IjYzNGNmYjJiZDZjMGVmNzk3Y2U0NDYwNSIsImlhdCI6MTY2NTk4OTkxMiwiZXhwIjoxNjY2MTYyNzEyfQ.wGy15K_s4j1xfKvM7WqtF8gH-lzgnQZWlRAtV3BoZaw
 
 
 ###

@@ -1,6 +1,7 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
-  ValidateDtoMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware, HttpError } from '../../common/index.js';
+  ValidateDtoMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware,
+  HttpError, ConfigInterface } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -17,9 +18,10 @@ import { DeleteParams, IndexQuery, ShowParams, UpdateParams } from './offer.type
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Registering routes for OfferController…');
     this.addRoute({

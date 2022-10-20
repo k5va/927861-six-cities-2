@@ -1,6 +1,6 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
-  DocumentExistsMiddleware, PrivateRouteMiddleware } from '../../common/index.js';
+  DocumentExistsMiddleware, PrivateRouteMiddleware, ConfigInterface } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -14,9 +14,10 @@ import { UpdateParams } from './favorites.types.js';
 export default class FavoritesController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Registering routes for FavoritesController…');
     this.addRoute({

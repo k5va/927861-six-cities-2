@@ -20,7 +20,7 @@ export default class UserController extends Controller {
     @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface,
     @inject(Component.ConfigInterface) private readonly configService: ConfigInterface,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Registering routes for UserController…');
     this.addRoute({

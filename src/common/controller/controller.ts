@@ -5,12 +5,27 @@ import asyncHandler from 'express-async-handler';
 import { LoggerInterface } from '../logger/logger.interface.js';
 import { RouteInterface } from './route.interface.js';
 import { ControllerInterface } from './controller.interface.js';
+import { TransformerInterface } from '../transformer/transformer.interface.js';
+import UrlPathTransformer from '../transformer/url-path-transformer.js';
+import { ConfigInterface } from '../config/config.interface.js';
+import { SomeObject } from '../../types/index.js';
+import getFullServerPath from '../../utils/get-full-server-path.js';
 
 @injectable()
 export abstract class Controller implements ControllerInterface {
   private readonly _router: Router;
+  private transformers: TransformerInterface[] = [
+    new UrlPathTransformer(
+      ['avatarUrl', 'previewImage', 'images'],
+      `${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}/${this.config.get('UPLOAD_DIRECTORY')}`,
+      `${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}/${this.config.get('STATIC_DIRECTORY')}`
+    ),
+  ];
 
-  constructor(protected readonly logger: LoggerInterface) {
+  constructor(
+    protected readonly logger: LoggerInterface,
+    protected readonly config: ConfigInterface,
+  ) {
     this._router = Router();
   }
 
@@ -30,6 +45,7 @@ export abstract class Controller implements ControllerInterface {
   }
 
   public send<T>(res: Response, statusCode: number, data: T): void {
+    this.transform(data as SomeObject);
     res
       .type('application/json')
       .status(statusCode)
@@ -46,5 +62,9 @@ export abstract class Controller implements ControllerInterface {
 
   public ok<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.OK, data);
+  }
+
+  private transform(data: SomeObject): void {
+    this.transformers.forEach((trasformer) => trasformer.transform(data));
   }
 }

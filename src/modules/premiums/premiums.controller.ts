@@ -1,5 +1,5 @@
 import * as core from 'express-serve-static-core';
-import { Controller, DocumentExistsMiddleware, LoggerInterface,
+import { ConfigInterface, Controller, DocumentExistsMiddleware, LoggerInterface,
   ValidateObjectIdMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
@@ -14,10 +14,11 @@ import { CityServiceInterface } from '../city/city-service.interface.js';
 export default class PremiumsController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
     @inject(Component.OfferServiceInterface) private readonly offerService: OfferServiceInterface,
     @inject(Component.CityServiceInterface) private readonly cityService: CityServiceInterface,
   ) {
-    super(logger);
+    super(logger, config);
 
     this.logger.info('Registering routes for PremiumsController…');
     this.addRoute({

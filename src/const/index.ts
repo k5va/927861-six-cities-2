@@ -7,3 +7,4 @@ export { default as DescriptionLength } from './description-length.enum.js';
 export { default as CommentLength } from './comment-length.enum.js';
 export { default as UserNameLength } from './user-name-length.enum.js';
 export { default as PasswordLength } from './password-length.enum.js';
+export { default as DEFAULT_STATIC_IMAGES } from './default-static-images.js';
