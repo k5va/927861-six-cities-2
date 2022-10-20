@@ -19,11 +19,6 @@ export default class CreateOfferDto {
   @IsMongoId({message: 'cityId must be a valid id'})
   public cityId!: string;
 
-  public previewImage!: string;
-
-  @IsArray({message: 'images must be an array'})
-  public images!: string[];
-
   @IsBoolean({ message: 'isFavorite must be boolean'})
   public isFavorite!: boolean;
 

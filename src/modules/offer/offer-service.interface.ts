@@ -17,4 +17,5 @@ export interface OfferServiceInterface extends DocumentExistsInterface {
   addToFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
   removeFromFavorites(id: string, userId: string): Promise<DocumentType<OfferEntity> | null>;
   addComment(offerId: string, dto: CreateCommentDto): Promise<DocumentType<CommentEntity> | null>;
+  updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null>;
 }

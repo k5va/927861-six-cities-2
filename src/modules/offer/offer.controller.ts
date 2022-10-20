@@ -1,7 +1,7 @@
 import * as core from 'express-serve-static-core';
 import { Controller, LoggerInterface, ValidateObjectIdMiddleware,
   ValidateDtoMiddleware, DocumentExistsMiddleware, PrivateRouteMiddleware,
-  HttpError, ConfigInterface } from '../../common/index.js';
+  HttpError, ConfigInterface, UploadFileMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -12,7 +12,10 @@ import { fillDTO } from '../../utils/index.js';
 import OfferResponse from './response/offer.response.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import OfferShortResponse from './response/offer-short.response.js';
-import { DeleteParams, IndexQuery, ShowParams, UpdateParams } from './offer.types.js';
+import { DeleteParams, IndexQuery, ShowParams, UpdateParams,
+  UploadPreviewImageParams } from './offer.types.js';
+import UploadPreviewImageResponse from './response/upload-preview-image.response.js';
+import UploadImagesResponse from './response/upload-images.response.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -62,6 +65,27 @@ export default class OfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId/preview',
+      method: HttpMethod.Post,
+      handler: this.uploadPreviewImage,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'preview'),
+      ]
+    });
+
+    this.addRoute({
+      path: '/:offerId/images',
+      method: HttpMethod.Post,
+      handler: this.uploadImages,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'images', true),
       ]
     });
   }
@@ -133,5 +157,25 @@ export default class OfferController extends Controller {
         `User ${userId} is not allowed to update / delete offer ${offerId}`,
         'OfferController');
     }
+  }
+
+  public async uploadPreviewImage(
+    req: Request<core.ParamsDictionary | UploadPreviewImageParams>,
+    res: Response
+  ) {
+    const {offerId} = req.params;
+    const updateDto = {previewImage: req.file?.filename};
+    await this.offerService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadPreviewImageResponse, updateDto));
+  }
+
+  public async uploadImages(
+    req: Request<core.ParamsDictionary | UploadPreviewImageParams>,
+    res: Response
+  ) {
+    const {offerId} = req.params;
+    const updateDto = {images: (req.files as Express.Multer.File[])?.map(({filename}) => filename)};
+    await this.offerService.updateById(offerId, updateDto);
+    this.created(res, fillDTO(UploadImagesResponse, updateDto));
   }
 }

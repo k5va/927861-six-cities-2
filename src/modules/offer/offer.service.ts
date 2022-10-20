@@ -11,6 +11,7 @@ import { DEFAULT_OFFER_COUNT, PREMIUM_OFFER_COUNT } from './offer.const.js';
 import CreateCommentDto from '../comment/dto/create-comment.dto.js';
 import { CommentEntity } from '../comment/comment.entity.js';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import UpdateOfferDto from './dto/update-offer.dto.js';
 
 @injectable()
 export default class OfferService implements OfferServiceInterface {
@@ -112,5 +113,11 @@ export default class OfferService implements OfferServiceInterface {
 
   public async exists(offerId: string): Promise<boolean> {
     return (await this.offerModel.exists({_id: offerId})) !== null;
+  }
+
+  public async updateById(offerId: string, dto: UpdateOfferDto): Promise<DocumentType<OfferEntity> | null> {
+    return this.offerModel
+      .findByIdAndUpdate(offerId, dto, {new: true})
+      .exec();
   }
 }
