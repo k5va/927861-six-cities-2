@@ -1,8 +1,9 @@
 import { OfferType } from '../../../types/index.js';
 
 import { IsDateString, IsEnum, IsInt, IsMongoId, Max, MaxLength,
-  Min, MinLength, IsBoolean, IsNumber, IsArray } from 'class-validator';
+  Min, MinLength, IsBoolean, IsNumber, IsArray, ArrayMinSize } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
+import { MIN_GOODS_COUNT } from '../offer.const.js';
 
 export default class CreateOfferDto {
   @MinLength(TitleLength.Min, {message: `Minimum title length must be ${TitleLength.Min}`})
@@ -44,6 +45,7 @@ export default class CreateOfferDto {
   public price!: number;
 
   @IsArray({message: 'goods must be an array'})
+  @ArrayMinSize(MIN_GOODS_COUNT, {message: `Should be at least ${MIN_GOODS_COUNT} good`})
   @IsMongoId({each: true, message: 'goods must be an array of valid ObjectId'})
   public goods!: string[];
 
