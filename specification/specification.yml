@@ -24,20 +24,20 @@ paths:
         предложения могут только авторизованные клиенты. В случае успешного создания предложения
         сервис в ответе возвращает информацию о созданном предложении (объект предложения).
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
 
       requestBody:
         description: Информация для создания нового предложения.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createOffer'
+              $ref: '#/components/schemas/CreateOfferDto'
         required: true
 
       responses:
@@ -46,20 +46,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offer'
+                $ref: '#/components/schemas/OfferResponse'
         "400":
           description: Ошибка данных
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
     get:
       tags:
@@ -88,24 +88,24 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/shortOffer'
+                    - $ref: '#/components/schemas/OfferShortResponse'
                     - type: object
 
   /offers/{offerId}:
-     put:
+     patch:
       tags:
         - offers
       summary: Редактирование предложения
       description: Редактирует предложение. Доступно только для зарегистрированных пользователей.
         Клиент может редактировать только свои предложения
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
         - name: offerId
           in: path
           description: Id предложения
@@ -119,7 +119,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/offer'
+              $ref: '#/components/schemas/UpdateOfferDto'
         required: true
 
       responses:
@@ -128,20 +128,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offer'
+                $ref: '#/components/schemas/OfferResponse'
         "400":
           description: Ошибка данных
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
      get:
       tags:
@@ -161,17 +161,17 @@ paths:
 
       responses:
         "200":
-          description: Объект предложеня.
+          description: Объект предложения.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offer'
+                $ref: '#/components/schemas/OfferResponse'
         "404":
           description: Предложение не найдено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
      delete:
       tags:
@@ -181,13 +181,13 @@ paths:
         Клиент может удалять только свои предложения. При удалении предложения комментарии к предложению
         удаляются автоматически.
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
         - name: offerId
           in: path
           description: Id предложения
@@ -204,13 +204,112 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
+
+  /offers/{offerId}/preview:
+     post:
+      tags:
+        - offers
+      summary: Загрузка превью предложения
+      description: Загрузка превью предложения. Файл в формате jpп или png
+      parameters:
+        - name: Authorization
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+      requestBody:
+        description: Файл с изображением.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadPreviewImage'
+        required: true
+
+      responses:
+        "201":
+          description: Изображение загружено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadPreviewImageResponse'
+        "404":
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+
+
+  /offers/{offerId}/images:
+     post:
+      tags:
+        - offers
+      summary: Загрузка картинок предложения
+      description: Загрузка картинок предложения. Файл в формате jpп или png. Доолжно быть 6 штук.
+      parameters:
+        - name: Authorization
+          in: header
+          description: Авторизационный токен пользователя
+          required: true
+          schema:
+            type: string
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+        - name: offerId
+          in: path
+          description: Id предложения
+          required: true
+          schema:
+            type: string
+            example: 633041890aa1e923453c2957
+      requestBody:
+        description: Файлы с изображением.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadImages'
+        required: true
+
+      responses:
+        "201":
+          description: Картинки загружены.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadImagesResponse'
+        "404":
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
 
   /favorites:
     get:
@@ -220,13 +319,13 @@ paths:
       description: Сервис возвращает все предложения, добавленные в избранное. Ресурс доступен
         только авторизованным клиентам.
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
 
       responses:
         "200":
@@ -238,14 +337,14 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/shortOffer'
+                    - $ref: '#/components/schemas/OfferShortResponse'
                     - type: object
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
   /favorites/{offerId}:
      post:
@@ -255,13 +354,13 @@ paths:
       description: Сервис предоставляет ресурс для добавления и удаления любого предложения в/из
         списка избранных предложений. Ресурс доступен только авторизованным клиентам.
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
         - name: offerId
           in: path
           description: ID предложения
@@ -283,19 +382,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offer'
+                $ref: '#/components/schemas/OfferShortResponse'
         "404":
           description: Предложение не найдено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
   /premium/{cityId}:
      get:
@@ -324,16 +423,16 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/shortOffer'
+                    - $ref: '#/components/schemas/OfferShortResponse'
                     - type: object
         "404":
           description: Ошибка данных, нет такого города.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
-  /comments:
+  /comments/{offerId}:
      post:
       tags:
         - comments
@@ -341,13 +440,13 @@ paths:
       description: Добавлять комментарии могут только авторизованные клиенты. В случае успешного
         добавления комментария сервис возвращает информацию о созданном комментарии (объект комментария).
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
         - name: offerId
           in: path
           description: Id предложения
@@ -361,7 +460,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createComment'
+              $ref: '#/components/schemas/CreateCommentDto'
         required: true
 
       responses:
@@ -370,21 +469,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/comment'
+                $ref: '#/components/schemas/CommentResponse'
         "400":
           description: Ошибка данных
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
+        "404":
+          description: Предложение не найдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
         "401":
           description: Пользователь не авторизован
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
-  /comments/{offerId}:
      get:
       tags:
         - comments
@@ -410,14 +514,14 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/comment'
+                    - $ref: '#/components/schemas/CommentResponse'
                     - type: object
         "404":
           description: Предложение не найдено
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotFoundErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
   /users:
     post:
@@ -431,7 +535,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createUser'
+              $ref: '#/components/schemas/CreateUserDto'
         required: true
 
       responses:
@@ -440,13 +544,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/UserResponse'
         "400":
           description: Ошибка данных
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DataErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
     get:
       tags:
@@ -457,26 +561,26 @@ paths:
         Если клиент авторизован, сервис возвращает соответствующий код состояния
         и информацию о пользователе
       parameters:
-        - name: X-Token
+        - name: Authorization
           in: header
           description: Авторизационный токен пользователя
           required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
       responses:
         "200":
           description: Пользователь авторизован. Объект пользователя.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/UserResponse'
         "401":
           description: Пользователь не авторизован.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthErrorMessage'
+                $ref: '#/components/schemas/ErrorObject'
 
   /users/:userId/avatar:
     post:
@@ -484,13 +588,32 @@ paths:
         - users
       summary: загрузка аватара пользователя
       description: Загрузка аватара. Доступно только для зарегистрированных пользователей
+      requestBody:
+        description: Файл с изображением.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadAvatar'
+        required: true
       responses:
         "201":
           description: Аватар загружен.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AvatarLoadedMessage'
+                $ref: '#/components/schemas/UploadUserAvatarResponse'
+        "404":
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
+        "401":
+          description: Пользователь не авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
 
   /users/login:
     post:
@@ -498,13 +621,13 @@ paths:
         - users
       summary: Вход в закрытую часть приложения
       description: Авторизует пользователя на основе логина и пароля. В случае успешного запроса
-        сервер вернёт токен в заголовоке X-Token, по которому в дальнейшем происходит авторизация.
+        сервер вернёт токен, по которому в дальнейшем происходит авторизация.
       requestBody:
         description: Данные для авторизации.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginUser'
+              $ref: '#/components/schemas/LoginUserDto'
         required: true
 
       responses:
@@ -513,13 +636,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/LoggedInUserResponse'
         "401":
           description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorObject'
 
 components:
   schemas:
-    createUser:
+    CreateUserDto:
       type: object
 
       properties:
@@ -535,15 +662,11 @@ components:
           type: boolean
           example: true
 
-        avatarUrl:
-          type: string
-          example: https://10.react.pages.academy/static/user.jpg
-
         password:
           type: string
           example: 123456
 
-    user:
+    UserResponse:
       type: object
 
       properties:
@@ -567,7 +690,7 @@ components:
           type: string
           example: https://10.react.pages.academy/static/user.jpg
 
-    loginUser:
+    LoginUserDto:
       type: object
 
       properties:
@@ -579,7 +702,28 @@ components:
           type: string
           example: 123456
 
-    createOffer:
+    LoggedInUserResponse:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+        name:
+          type: string
+          example: keks
+
+        avatarUrl:
+          type: string
+          example: keks.jpg
+
+        token:
+          type: string
+          example:  eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImsxQHRlc3QucnUiLCJpZCI6IjYzNGNmYjJiZDZjMGVmNzk3Y2U0NDYwNSIsImlhdCI6MTY2NjE2NTMyMiwiZXhwIjoxNjY2MzM4MTIyfQ.dUYt38O1XOZ-EvD4lLJglI4VZmz1rx_ZdNU1a8HtrqI
+
+
+    CreateOfferDto:
       type: object
 
       properties:
@@ -600,16 +744,6 @@ components:
         cityId:
           type: string
           example: 633041890aa1e923453c294f
-
-        previewImage:
-          type: string
-          example: https://10.react.pages.academy/static/hotel/1.jpg
-
-        images:
-          type: array
-          items:
-            type: string
-            example: https://10.react.pages.academy/static/hotel/1.jpg
 
         isFavorite:
           type: boolean
@@ -653,7 +787,7 @@ components:
           type: number
           example: 53.550341
 
-    offer:
+    OfferResponse:
       type: object
 
       properties:
@@ -735,7 +869,69 @@ components:
           type: number
           example: 10
 
-    shortOffer:
+    UpdateOfferDto:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Penthouse, 4-5 rooms + 5 balconies
+
+        description:
+          type: string
+          example: Peaceful studio in the most wanted area in town. Quiet house Near of everything.
+            Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a
+            walking distance.
+
+        cityId:
+          type: string
+          example: 633041890aa1e923453c294f
+
+        previewImage:
+          type: string
+          example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        images:
+          type: array
+          items:
+            type: string
+            example: https://10.react.pages.academy/static/hotel/1.jpg
+
+        isFavorite:
+          type: boolean
+          example: true
+
+        isPremium:
+          type: boolean
+          example: true
+
+        type:
+          type: string
+          example: apartment.
+
+        bedrooms:
+          type: number
+          example: 4
+
+        price:
+          type: number
+          example: 400
+
+        goods:
+          type: array
+          items:
+            type: string
+            example: 633041890aa1e923453c294c
+
+        longitude:
+          type: number
+          example: 6.776314
+
+        latitude:
+          type: number
+          example: 53.550341
+
+    OfferShortResponse:
       type: object
 
       properties:
@@ -783,7 +979,7 @@ components:
           type: number
           example: 10
 
-    createComment:
+    CreateCommentDto:
       type: object
 
       properties:
@@ -807,7 +1003,7 @@ components:
           type: string
           example: 633041890aa1e923453c294c
 
-    comment:
+    CommentResponse:
       type: object
 
       properties:
@@ -831,30 +1027,81 @@ components:
           type: string
           example: 633041890aa1e923453c294c
 
-    AuthErrorMessage:
+    ErrorObject:
       type: object
       properties:
-        error:
+        errorType:
           type: string
-          example: You are not logged in or you do not have permission to this page.
+          example: COMMON_ERROR
+        message:
+          type: string
+          example: Invalid token
+        details:
+          type: array
+          items:
+            type: object
+            allOf:
+              - $ref: '#/components/schemas/ValidationErrorField'
+              - type: object
 
-    NotFoundErrorMessage:
+    ValidationErrorField:
       type: object
       properties:
-        error:
+        property:
           type: string
-          example: Offer not found - id 633041890aa1e923453c294c
+          example: maxAdults
+        value:
+          type: string
+          example: 300
+        messages:
+          type: array
+          items:
+            type: string
+            example: Maximum maxAdults is 10
 
-    DataErrorMessage:
+    UploadPreviewImage:
       type: object
       properties:
-        error:
+        preview:
           type: string
-          example: offer price should be of type number
+          format: binary
 
-    AvatarLoadedMessage:
+    UploadImages:
       type: object
       properties:
-        filepath:
+        images:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    UploadAvatar:
+      type: object
+      properties:
+        avatar:
           type: string
-          example: upload/NX916d_kUb-mQn13IP2im.png
+          format: binary
+
+    UploadPreviewImageResponse:
+      type: object
+      properties:
+        previewImage:
+          type: string
+          example: image.png
+
+    UploadImagesResponse:
+      type: object
+      properties:
+        images:
+          type: array
+          items:
+            type: string
+            example: image.png
+
+    UploadUserAvatarResponse:
+      type: object
+      properties:
+        avatarUrl:
+          type: string
+          example: avatar.png
+
