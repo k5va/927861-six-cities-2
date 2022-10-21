@@ -4,6 +4,7 @@ import { OfferType } from '../../types/index.js';
 import { CityEntity } from '../city/city.entity.js';
 import { GoodEntity } from '../good/good.entity.js';
 import { UserEntity } from '../user/user.entity.js';
+import { DEFAULT_OFFER_IMG } from './offer.const.js';
 
 const {prop, modelOptions} = typegoose;
 
@@ -27,10 +28,10 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ ref: CityEntity, required: true })
   public cityId!: Ref<CityEntity>;
 
-  @prop({ required: true})
+  @prop({ default: DEFAULT_OFFER_IMG})
   public previewImage!: string;
 
-  @prop({ required: true, type: String, default: [] })
+  @prop({ type: String, default: [] })
   public images!: string[];
 
   @prop({ required: true, default: false })

@@ -4,6 +4,7 @@ import validator from 'convict-format-with-validator';
 convict.addFormats(validator);
 
 export type ConfigSchema = {
+  HOST: string;
   PORT: number;
   SALT: string;
   DB_HOST: string;
@@ -12,10 +13,17 @@ export type ConfigSchema = {
   DB_PORT: number;
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
+  STATIC_DIRECTORY: string;
   JWT_SECRET: string;
 }
 
 export const configSchema = convict<ConfigSchema>({
+  HOST: {
+    doc: 'service host',
+    format: 'ipaddress',
+    env: 'HOST',
+    default: '127.0.0.1'
+  },
   PORT: {
     doc: 'Port for incoming connections',
     format: 'port',
@@ -62,7 +70,13 @@ export const configSchema = convict<ConfigSchema>({
     doc: 'file upload directory name',
     format: String,
     env: 'UPLOAD_DIRECTORY',
-    default: 'null'
+    default: 'upload'
+  },
+  STATIC_DIRECTORY: {
+    doc: 'static directory name',
+    format: String,
+    env: 'STATIC_DIRECTORY',
+    default: 'static'
   },
   JWT_SECRET: {
     doc: 'JWT secret for signiture',

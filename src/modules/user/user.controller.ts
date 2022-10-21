@@ -12,6 +12,7 @@ import { UserServiceInterface } from './user-service.interface.js';
 import { StatusCodes } from 'http-status-codes';
 import { createJWT, fillDTO } from '../../utils/index.js';
 import { JWT_ALGORITM } from './user.const.js';
+import UploadUserAvatarResponse from './response/upload-user-avatar.response.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -20,7 +21,7 @@ export default class UserController extends Controller {
     @inject(Component.UserServiceInterface) private readonly userService: UserServiceInterface,
     @inject(Component.ConfigInterface) private readonly configService: ConfigInterface,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Registering routes for UserController…');
     this.addRoute({
@@ -99,6 +100,9 @@ export default class UserController extends Controller {
   }
 
   public async uploadAvatar(req: Request, res: Response): Promise<void> {
-    this.created(res, {filepath: req.file?.path});
+    const {userId} = req.params;
+    const uploadedFile = {avatarUrl: req.file?.filename};
+    await this.userService.updateById(userId, uploadedFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadedFile));
   }
 }

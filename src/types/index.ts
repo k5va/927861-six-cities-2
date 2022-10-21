@@ -6,3 +6,4 @@ export { default as Component } from './component.js';
 export { default as Good } from './good.type.js';
 export { default as City } from './city.type.js';
 export { default as HttpMethod } from './http-method.enum.js';
+export { default as SomeObject } from './some-object.type.js';

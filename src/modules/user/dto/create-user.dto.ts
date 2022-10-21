@@ -21,7 +21,4 @@ export default class CreateUserDto {
 
   @IsBoolean({ message: 'isPro must be boolean'})
   public isPro!: boolean;
-
-  @IsString({message: 'avatarUrl is required'})
-  public avatarUrl!: string;
 }

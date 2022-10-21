@@ -2,6 +2,7 @@ import { User } from '../../types/index.js';
 import typegoose, {getModelForClass, defaultClasses} from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/index.js';
 import { UserNameLength } from '../../const/index.js';
+import { DEFAULT_AVATAR_IMG } from './user.const.js';
 
 const {prop, modelOptions} = typegoose;
 
@@ -32,7 +33,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   @prop({ required: true })
   public password!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, default: DEFAULT_AVATAR_IMG })
   public avatarUrl: string;
 
   @prop({ required: true, default: false })
