@@ -43,13 +43,13 @@ export enum AppRoute {
 }
 
 export enum ApiRoute {
-  Offers = '/hotels',
-  Login = '/login',
+  Offers = '/offers',
+  Login = '/users/login',
   Logout = '/logout',
-  Register = '/register',
+  Register = '/users',
   Avatar = '/avatar',
   Comments = '/comments',
-  Favorite = '/favorite',
+  Favorite = '/favorites',
   Premium = '/premium',
 }
 
