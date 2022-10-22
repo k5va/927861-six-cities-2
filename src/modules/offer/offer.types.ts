@@ -14,7 +14,3 @@ export type IndexQuery = {
   count?: number
 }
 
-export type UploadPreviewImageParams = {
-  offerId: string
-}
-

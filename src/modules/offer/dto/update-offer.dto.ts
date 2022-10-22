@@ -1,6 +1,6 @@
 import { OfferType } from '../../../types/index.js';
 import { IsEnum, IsInt, IsMongoId, Max, MaxLength,
-  Min, MinLength, IsBoolean, IsNumber, IsArray, IsOptional } from 'class-validator';
+  Min, MinLength, IsBoolean, IsNumber, IsArray, IsOptional, IsUrl } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
 
 export default class UpdateOfferDto {
@@ -19,10 +19,11 @@ export default class UpdateOfferDto {
   public cityId?: string;
 
   @IsOptional()
+  @IsUrl({message: 'Should be valid URL string'})
   public previewImage?: string;
 
   @IsOptional()
-  @IsArray({message: 'images must be an array'})
+  @IsArray({message: 'images must be an array of URL'})
   public images?: string[];
 
   @IsOptional()

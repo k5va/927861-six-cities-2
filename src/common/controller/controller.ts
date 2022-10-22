@@ -16,7 +16,7 @@ export abstract class Controller implements ControllerInterface {
   private readonly _router: Router;
   private transformers: TransformerInterface[] = [
     new UrlPathTransformer(
-      ['avatarUrl', 'previewImage', 'images'],
+      ['avatarUrl'],
       `${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}/${this.config.get('UPLOAD_DIRECTORY')}`,
       `${getFullServerPath(this.config.get('HOST'), this.config.get('PORT'))}/${this.config.get('STATIC_DIRECTORY')}`
     ),

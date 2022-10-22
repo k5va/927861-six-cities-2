@@ -5,6 +5,8 @@ export default class CreateOfferDto {
   public description!: string;
   public publishDate!: Date;
   public cityId!: string;
+  public previewImage!: string;
+  public images!: string[];
   public isFavorite!: boolean;
   public isPremium!: boolean;
   public type!: OfferType;

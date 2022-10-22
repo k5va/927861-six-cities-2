@@ -1,9 +1,10 @@
 import { OfferType } from '../../../types/index.js';
 
 import { IsDateString, IsEnum, IsInt, IsMongoId, Max, MaxLength,
-  Min, MinLength, IsBoolean, IsNumber, IsArray, ArrayMinSize } from 'class-validator';
+  Min, MinLength, IsBoolean, IsNumber, IsArray, ArrayMinSize,
+  ArrayMaxSize, IsUrl } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
-import { MIN_GOODS_COUNT } from '../offer.const.js';
+import { MIN_GOODS_COUNT, OFFER_IMAGES_COUNT } from '../offer.const.js';
 
 export default class CreateOfferDto {
   @MinLength(TitleLength.Min, {message: `Minimum title length must be ${TitleLength.Min}`})
@@ -25,6 +26,14 @@ export default class CreateOfferDto {
 
   @IsBoolean({ message: 'isPremium must be boolean'})
   public isPremium!: boolean;
+
+  @IsUrl({message: 'Should be valid URL string'})
+  public previewImage!: string;
+
+  @IsArray({message: 'images must be an array'})
+  @ArrayMinSize(OFFER_IMAGES_COUNT, {message: `Should be ${OFFER_IMAGES_COUNT} images`})
+  @ArrayMaxSize(OFFER_IMAGES_COUNT, {message: `Should be ${OFFER_IMAGES_COUNT} images`})
+  public images!: string[];
 
   @IsEnum(OfferType, {message: `type must be in ${Object.keys(OfferType)}`})
   public type!: OfferType;

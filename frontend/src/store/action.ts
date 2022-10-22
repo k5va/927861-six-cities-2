@@ -40,9 +40,9 @@ export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra:
   Action.FETCH_FAVORITE_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Offer[]>(ApiRoute.Favorite);
+    const { data } = await api.get<OfferShortResponse[]>(ApiRoute.Favorite);
 
-    return data;
+    return data.map(OfferShortResponse.adaptToOffer);
   });
 
 export const fetchOffer = createAsyncThunk<Offer, Offer['id'], { extra: Extra }>(

@@ -212,105 +212,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorObject'
 
-  /offers/{offerId}/preview:
-     post:
-      tags:
-        - offers
-      summary: Загрузка превью предложения
-      description: Загрузка превью предложения. Файл в формате jpп или png
-      parameters:
-        - name: Authorization
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-        - name: offerId
-          in: path
-          description: Id предложения
-          required: true
-          schema:
-            type: string
-            example: 633041890aa1e923453c2957
-      requestBody:
-        description: Файл с изображением.
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UploadPreviewImage'
-        required: true
-
-      responses:
-        "201":
-          description: Изображение загружено.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UploadPreviewImageResponse'
-        "404":
-          description: Предложение не найдено
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorObject'
-        "401":
-          description: Пользователь не авторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorObject'
-
-
-  /offers/{offerId}/images:
-     post:
-      tags:
-        - offers
-      summary: Загрузка картинок предложения
-      description: Загрузка картинок предложения. Файл в формате jpп или png. Доолжно быть 6 штук.
-      parameters:
-        - name: Authorization
-          in: header
-          description: Авторизационный токен пользователя
-          required: true
-          schema:
-            type: string
-            example: Bearer T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
-        - name: offerId
-          in: path
-          description: Id предложения
-          required: true
-          schema:
-            type: string
-            example: 633041890aa1e923453c2957
-      requestBody:
-        description: Файлы с изображением.
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UploadImages'
-        required: true
-
-      responses:
-        "201":
-          description: Картинки загружены.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UploadImagesResponse'
-        "404":
-          description: Предложение не найдено
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorObject'
-        "401":
-          description: Пользователь не авторизован
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorObject'
-
   /favorites:
     get:
       tags:
@@ -753,6 +654,16 @@ components:
           type: boolean
           example: true
 
+        previewImage:
+          type: string
+          example: https://10.react.pages.academy/static/hotel/9.jpg
+
+        images:
+          type: array
+          items:
+            type: string
+            example: https://10.react.pages.academy/static/hotel/9.jpg
+
         type:
           type: string
           example: apartment
@@ -1059,44 +970,12 @@ components:
             type: string
             example: Maximum maxAdults is 10
 
-    UploadPreviewImage:
-      type: object
-      properties:
-        preview:
-          type: string
-          format: binary
-
-    UploadImages:
-      type: object
-      properties:
-        images:
-          type: array
-          items:
-            type: string
-            format: binary
-
     UploadAvatar:
       type: object
       properties:
         avatar:
           type: string
           format: binary
-
-    UploadPreviewImageResponse:
-      type: object
-      properties:
-        previewImage:
-          type: string
-          example: image.png
-
-    UploadImagesResponse:
-      type: object
-      properties:
-        images:
-          type: array
-          items:
-            type: string
-            example: image.png
 
     UploadUserAvatarResponse:
       type: object
