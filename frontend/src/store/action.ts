@@ -1,10 +1,10 @@
 import type { History } from 'history';
 import type { AxiosInstance, AxiosError } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
+import { OfferResponse } from '../dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -32,9 +32,9 @@ export const fetchOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }
   Action.FETCH_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<Offer[]>(ApiRoute.Offers);
+    const { data } = await api.get<OfferResponse[]>(ApiRoute.Offers);
 
-    return data;
+    return data.map(OfferResponse.adaptToOffer);
   });
 
 export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }>(
@@ -114,7 +114,7 @@ export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { 
     const { api } = extra;
 
     try {
-      const { data } = await api.get<User>(ApiRoute.Login);
+      const { data } = await api.get<User>(ApiRoute.Register);
 
       return data.email;
     } catch (error) {
@@ -158,7 +158,7 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
     if (avatar) {
       const payload = new FormData();
       payload.append('avatar', avatar);
-      await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
+      await api.post(`${ApiRoute.Register}/${data.id}${ApiRoute.Avatar}`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
@@ -181,7 +181,7 @@ export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra
     const { api, history } = extra;
 
     try {
-      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}/${status}`);
+      const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}?action=${status}`);
 
       return data;
     } catch (error) {
