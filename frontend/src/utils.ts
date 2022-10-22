@@ -22,7 +22,7 @@ export class Token {
   }
 
   static save(token: string) {
-    localStorage.setItem(this._name, token);
+    localStorage.setItem(this._name, `Bearer ${token}`);
   }
 
   static drop() {
