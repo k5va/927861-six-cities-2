@@ -4,7 +4,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { UserAuth, User, Offer, Comment, CommentAuth, FavoriteAuth, UserRegister, NewOffer } from '../types/types';
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import { Token } from '../utils';
-import { OfferResponse } from '../dto';
+import { OfferShortResponse } from '../dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -32,9 +32,8 @@ export const fetchOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }
   Action.FETCH_OFFERS,
   async (_, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<OfferResponse[]>(ApiRoute.Offers);
-
-    return data.map(OfferResponse.adaptToOffer);
+    const { data } = await api.get<OfferShortResponse[]>(ApiRoute.Offers);
+    return data.map(OfferShortResponse.adaptToOffer);
   });
 
 export const fetchFavoriteOffers = createAsyncThunk<Offer[], undefined, { extra: Extra }>(
