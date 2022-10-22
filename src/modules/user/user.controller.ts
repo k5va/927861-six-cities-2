@@ -89,7 +89,7 @@ export default class UserController extends Controller {
     {user}: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     res: Response): Promise<void> {
 
-    this.logger.info(`Checking user status for ${user.id}`);
+    this.logger.info(`Checking user status for ${user?.id}`);
 
     if (user) {
       const existingUser = await this.userService.findById(user.id);
