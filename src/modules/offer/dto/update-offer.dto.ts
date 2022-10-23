@@ -1,5 +1,5 @@
 import { OfferType } from '../../../types/index.js';
-import { IsEnum, IsInt, IsMongoId, Max, MaxLength,
+import { IsEnum, IsInt, Max, MaxLength,
   Min, MinLength, IsBoolean, IsNumber, IsArray, IsOptional, IsUrl } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
 
@@ -15,7 +15,6 @@ export default class UpdateOfferDto {
   public description?: string;
 
   @IsOptional()
-  @IsMongoId({message: 'cityId must be a valid id'})
   public cityId?: string;
 
   @IsOptional()
@@ -54,7 +53,6 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsArray({message: 'goods must be an array'})
-  @IsMongoId({each: true, message: 'goods must be an array of valid ObjectId'})
   public goods?: string[];
 
   @IsOptional()
