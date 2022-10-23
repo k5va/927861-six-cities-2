@@ -73,7 +73,7 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .findByIdAndUpdate(id, {'$addToSet': {
         inFavorites: userId,
-      }})
+      }}, { new: true })
       .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }
@@ -82,7 +82,7 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel
       .findByIdAndUpdate(id, {'$pull': {
         inFavorites: userId,
-      }})
+      }}, { new: true })
       .populate(['hostId', 'goods', 'cityId'])
       .exec();
   }

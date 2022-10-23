@@ -9,6 +9,7 @@ import { fillDTO } from '../../utils/index.js';
 import OfferShortResponse from '../offer/response/offer-short.response.js';
 import { FavoritesAction } from './favorites.const.js';
 import { UpdateParams } from './favorites.types.js';
+import OfferResponse from '../offer/response/offer.response.js';
 
 @injectable()
 export default class FavoritesController extends Controller {
@@ -58,7 +59,7 @@ export default class FavoritesController extends Controller {
     }
     this.logger.info(`Offer with id ${offerId} updated favorites status ${action} by user ${userId}`);
     offer?.setIsFavorite(userId);
-    this.ok(res, fillDTO(OfferShortResponse, offer));
+    this.ok(res, fillDTO(OfferResponse, offer));
   }
 
   public async index({user}: Request, res: Response): Promise<void> {

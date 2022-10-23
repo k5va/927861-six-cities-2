@@ -191,9 +191,9 @@ export const postFavorite = createAsyncThunk<Offer, FavoriteAuth, { extra: Extra
     const { api, history } = extra;
 
     try {
-      const { data } = await api.post<OfferShortResponse>(`${ApiRoute.Favorite}/${id}?action=${status}`);
+      const { data } = await api.post<OfferResponse>(`${ApiRoute.Favorite}/${id}?action=${status}`);
 
-      return adaptFromOfferShortResponse(data);
+      return adaptFromOfferResponse(data);
     } catch (error) {
       const axiosError = error as AxiosError;
 
