@@ -22,7 +22,7 @@ export default class OfferService implements OfferServiceInterface {
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
-    const offer = await this.offerModel.create({...dto, inFavorites: dto.isFavorite ? [dto.hostId] : []});
+    const offer = await this.offerModel.create({...dto, inFavorites: []});
     this.logger.info(`New Offer created: ${dto.title}`);
 
     return offer.populate(['hostId', 'goods', 'cityId']);
