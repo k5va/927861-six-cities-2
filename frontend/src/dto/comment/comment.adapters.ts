@@ -11,11 +11,11 @@ export const adaptToCreateCommentDto = ({comment, rating}: {comment: string, rat
   offerId: ''
 });
 
-export const adaptFromCommentResponse = ({rating, publishDate, text, user}: CommentResponse)
+export const adaptFromCommentResponse = ({id, rating, publishDate, text, user}: CommentResponse)
   : Comment => ({
-  id: '',
+  id,
   comment: text,
   rating,
-  date: publishDate.toISOString(),
+  date: publishDate.toString(),
   user
 });
