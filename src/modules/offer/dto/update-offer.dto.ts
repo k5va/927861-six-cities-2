@@ -1,7 +1,9 @@
 import { OfferType } from '../../../types/index.js';
 import { IsEnum, IsInt, Max, MaxLength,
-  Min, MinLength, IsBoolean, IsNumber, IsArray, IsOptional, IsUrl } from 'class-validator';
+  Min, MinLength, IsBoolean, IsNumber, IsArray, IsOptional, IsUrl,
+  ArrayMinSize, ArrayMaxSize } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
+import { OFFER_IMAGES_COUNT } from '../offer.const.js';
 
 export default class UpdateOfferDto {
   @IsOptional()
@@ -23,6 +25,8 @@ export default class UpdateOfferDto {
 
   @IsOptional()
   @IsArray({message: 'images must be an array of URL'})
+  @ArrayMinSize(OFFER_IMAGES_COUNT, {message: `Should be ${OFFER_IMAGES_COUNT} images`})
+  @ArrayMaxSize(OFFER_IMAGES_COUNT, {message: `Should be ${OFFER_IMAGES_COUNT} images`})
   public images?: string[];
 
   @IsOptional()
