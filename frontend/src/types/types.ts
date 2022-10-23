@@ -68,3 +68,11 @@ export type NewOffer = {
   goods: string[];
   location: Location;
 };
+
+export type ErrorType = unknown;
+
+export type ValidationErrorField = {
+  property: string;
+  value: string;
+  messages: string[];
+}

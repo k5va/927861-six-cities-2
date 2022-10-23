@@ -47,8 +47,8 @@ export default class CreateOfferDto {
   public maxAdults!: number;
 
   @IsNumber({}, {message: 'price must be a number'})
-  @Min(Price.Min, {message: `Minimum maxAdults is ${Price.Min}`})
-  @Max(Price.Max, {message: `Maximum maxAdults is ${Price.Max}`})
+  @Min(Price.Min, {message: `Minimum price is ${Price.Min}`})
+  @Max(Price.Max, {message: `Maximum price is ${Price.Max}`})
   public price!: number;
 
   @IsArray({message: 'goods must be an array'})

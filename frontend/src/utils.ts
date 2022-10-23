@@ -1,4 +1,9 @@
 import { MAX_PERCENT_STARS_WIDTH, STARS_COUNT } from './const';
+import request from 'axios';
+import {toast} from 'react-toastify';
+import {ErrorType, ValidationErrorField} from './types/types';
+import {HttpCode} from './const';
+
 
 export const formatDate = (date: string) => new Intl.DateTimeFormat(
   'en-US',
@@ -29,3 +34,37 @@ export class Token {
     localStorage.removeItem(this._name);
   }
 }
+
+export const errorHandle = (error: ErrorType): void => {
+  if (!request.isAxiosError(error)) {
+    throw error;
+  }
+
+  const {response} = error;
+
+  if (response) {
+    switch (response.status) {
+      case HttpCode.BadRequest:
+        (response.data.details)
+          ? response.data.details
+            .forEach(
+              (detail: ValidationErrorField) =>
+                detail.messages
+                  .forEach(
+                    (message: string) => toast.warn(message),
+                  ),
+            )
+          : toast.warn(response.data.message);
+        break;
+      case HttpCode.NoAuth:
+        toast.warn(response.data.message);
+        break;
+      case HttpCode.NotFound:
+        toast.warn(response.data.message);
+        break;
+      case HttpCode.Conflict:
+        toast.warn(response.data.message);
+        break;
+    }
+  }
+};
