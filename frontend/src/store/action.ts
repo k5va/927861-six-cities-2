@@ -158,7 +158,9 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
   Action.REGISTER_USER,
   async ({ email, password, name, avatar, isPro }, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<UserResponse>(ApiRoute.Register, { email, password, name, isPro });
+    const { data } = await api.post<UserResponse>(
+      ApiRoute.Register, { email, password, name, isPro: Boolean(isPro) }
+    );
     if (avatar) {
       const payload = new FormData();
       payload.append('avatar', avatar);
