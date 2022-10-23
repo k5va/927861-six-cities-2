@@ -101,7 +101,7 @@ export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Ext
   Action.FETCH_PREMIUM_OFFERS,
   async (cityName, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<OfferShortResponse[]>(`${ApiRoute.Premium}?city=${cityName}`);
+    const { data } = await api.get<OfferShortResponse[]>(`${ApiRoute.Premium}/${cityName}`);
 
     return data.map(adaptFromOfferShortResponse);
   });
