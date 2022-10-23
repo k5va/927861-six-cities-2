@@ -12,6 +12,7 @@ export { OfferGeneratorInterface } from './offer-generator/offer-generator.inter
 export { default as OfferGenerator } from './offer-generator/offer-generator.js';
 export { ControllerInterface } from './controller/controller.interface.js';
 export { DocumentExistsInterface } from './controller/document-exists.interface.js';
+export { FindIdByNameInterface } from './controller/find-id-by-name.interface.js';
 export { Controller } from './controller/controller.js';
 export { default as HttpError } from './errors/http-error.js';
 export { ExceptionFilterInterface } from './errors/exception-filter.interface.js';

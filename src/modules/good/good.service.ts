@@ -25,6 +25,11 @@ export default class GoodService implements GoodServiceInterface {
     return this.goodModel.findOne({name});
   }
 
+  public async findIdByName(name: string): Promise<string | null> {
+    const good = await this.goodModel.findOne({name});
+    return good?.id;
+  }
+
   public async findOrCreate(dto: CreateGoodDto): Promise<DocumentType<GoodEntity>> {
     const good = await this.findByName(dto.name);
     return good ? good : this.create(dto);

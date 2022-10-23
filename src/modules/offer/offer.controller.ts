@@ -15,6 +15,7 @@ import OfferShortResponse from './response/offer-short.response.js';
 import { DeleteParams, IndexQuery, ShowParams, UpdateParams } from './offer.types.js';
 import { GoodServiceInterface } from '../good/good-service.interface.js';
 import { CityServiceInterface } from '../city/city-service.interface.js';
+import PopulateIdMiddleware from '../../common/middleware/populate-id.middleware.js';
 
 @injectable()
 export default class OfferController extends Controller {
@@ -34,7 +35,9 @@ export default class OfferController extends Controller {
       handler: this.create,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateDtoMiddleware(CreateOfferDto)
+        new ValidateDtoMiddleware(CreateOfferDto),
+        new PopulateIdMiddleware(this.cityService, 'Offer', 'cityId', true, true),
+        new PopulateIdMiddleware(this.goodService, 'Offer', 'goods', true, true),
       ]
     });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
@@ -56,6 +59,8 @@ export default class OfferController extends Controller {
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDto),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new PopulateIdMiddleware(this.cityService, 'City', 'cityId', true, false),
+        new PopulateIdMiddleware(this.goodService, 'Offer', 'goods', true, false),
       ]
     });
     this.addRoute({
@@ -75,15 +80,10 @@ export default class OfferController extends Controller {
     res: Response,
   ): Promise<void> {
 
-    const cityId = await this.getCityIdByName(body.cityId); // TODO: rename field to city
-    const goods = await this.getGoodsIdByNames(body.goods);
-
     const offer = await this.offerService.create({
       ...body,
       hostId: user.id,
       isFavorite: false,
-      goods,
-      cityId,
     });
     this.send(res, StatusCodes.CREATED, fillDTO(OfferResponse, offer));
   }
@@ -97,17 +97,7 @@ export default class OfferController extends Controller {
     const {offerId} = params;
 
     await this.checkUserOfferPermission(userId, offerId);
-    if (body.cityId) {
-      const cityId = await this.getCityIdByName(body.cityId);
-      body = {...body, cityId};
-    }
-    if (body.goods) {
-      const goods = await this.getGoodsIdByNames(body.goods);
-      body = {...body, goods};
-    }
-
     const offer = await this.offerService.update(offerId, body);
-
     offer?.setIsFavorite(userId);
     this.ok(res, fillDTO(OfferResponse, offer));
   }
@@ -155,33 +145,5 @@ export default class OfferController extends Controller {
         `User ${userId} is not allowed to update / delete offer ${offerId}`,
         'OfferController');
     }
-  }
-
-  private async getCityIdByName(name: string): Promise<string> {
-    const city = await this.cityService.findByName(name);
-    if (!city) {
-      throw new HttpError(
-        StatusCodes.BAD_REQUEST,
-        `City ${name} is not alowed. Please provide a valid city name`,
-        'OfferController');
-    }
-
-    return city.id;
-  }
-
-  private async getGoodsIdByNames(names: string[]): Promise<string[]> {
-    const goods = [];
-    for (const name of names) {
-      const good = await this.goodService.findByName(name);
-      if (good) {
-        goods.push(good.id);
-      } else {
-        throw new HttpError(
-          StatusCodes.BAD_REQUEST,
-          `Good ${name} is not alowed. Please provide a valid good`,
-          'OfferController');
-      }
-    }
-    return goods;
   }
 }

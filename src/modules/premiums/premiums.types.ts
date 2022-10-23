@@ -1,3 +1,3 @@
 export type IndexParams = {
-  cityId: string
+  city: string
 }
