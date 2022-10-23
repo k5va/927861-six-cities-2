@@ -1,6 +1,6 @@
 import { OfferType } from '../../../types/index.js';
 
-import { IsDateString, IsEnum, IsInt, IsMongoId, Max, MaxLength,
+import { IsDateString, IsEnum, IsInt, Max, MaxLength,
   Min, MinLength, IsBoolean, IsNumber, IsArray, ArrayMinSize,
   ArrayMaxSize, IsUrl } from 'class-validator';
 import { DescriptionLength, TitleLength, Bedrooms, MaxAdults, Price } from '../../../const/index.js';
@@ -18,10 +18,8 @@ export default class CreateOfferDto {
   @IsDateString({}, {message: 'publishDate must be valid ISO date'})
   public publishDate!: Date;
 
-  @IsMongoId({message: 'cityId must be a valid id'})
   public cityId!: string;
 
-  @IsBoolean({ message: 'isFavorite must be boolean'})
   public isFavorite!: boolean;
 
   @IsBoolean({ message: 'isPremium must be boolean'})
@@ -55,7 +53,6 @@ export default class CreateOfferDto {
 
   @IsArray({message: 'goods must be an array'})
   @ArrayMinSize(MIN_GOODS_COUNT, {message: `Should be at least ${MIN_GOODS_COUNT} good`})
-  @IsMongoId({each: true, message: 'goods must be an array of valid ObjectId'})
   public goods!: string[];
 
   public hostId!: string;
