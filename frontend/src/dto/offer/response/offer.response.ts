@@ -2,7 +2,6 @@ import { OfferType } from '../offer-type.enum.js';
 import CityResponse from '../../city/response/city.response.js';
 import GoodResponse from '../../good/response/good.response.js';
 import UserResponse from '../../user/response/user.response.js';
-import { Offer } from '../../../types/types.js';
 
 export default class OfferResponse {
   public id!: string;
@@ -24,28 +23,4 @@ export default class OfferResponse {
   public host!: UserResponse;
   public longitude!: number;
   public latitude!: number;
-
-  public static adaptToOffer({id, price, rating, title, isFavorite, isPremium,
-    previewImage, city, type, bedrooms, description, longitude, latitude,
-    maxAdults, goods, images, host}: OfferResponse): Offer {
-
-    return {
-      id,
-      price,
-      rating,
-      title,
-      isPremium,
-      isFavorite,
-      previewImage,
-      city: {name: city.name, location: {longitude: city.longitude, latitude: city.latitude}},
-      type,
-      bedrooms,
-      description,
-      location: {longitude, latitude},
-      maxAdults,
-      goods: goods.map(({name}) => name),
-      images,
-      host
-    };
-  }
 }

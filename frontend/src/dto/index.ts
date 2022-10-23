@@ -14,5 +14,6 @@ export { default as CreateOfferDto } from './offer/dto/create-offer.dto';
 export { default as UpdateOfferDto } from './offer/dto/update-offer.dto';
 export { default as OfferShortResponse } from './offer/response/offer-short.response';
 export { default as OfferResponse } from './offer/response/offer.response';
-export { default as UploadImagesResponse } from './offer/response/upload-images.response';
-export { default as UploadPreviewImageResponse } from './offer/response/upload-preview-image.response';
+export { adaptToCreateOfferDto, adaptToUpdateOfferDto, adaptFromOfferShortResponse,
+  adaptFromOfferResponse } from './offer/offer.adapters';
+export { adaptFromCommentResponse,adaptToCreateCommentDto } from './comment/comment.adapters';
