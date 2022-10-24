@@ -1,6 +1,6 @@
 import { Controller, LoggerInterface, ConfigInterface,
   HttpError, ValidateDtoMiddleware, ValidateObjectIdMiddleware,
-  DocumentExistsMiddleware, UploadFileMiddleware, PrivateRouteMiddleware } from '../../common/index.js';
+  DocumentExistsMiddleware, UploadFileMiddleware } from '../../common/index.js';
 import { inject, injectable } from 'inversify';
 import { Component, HttpMethod } from '../../types/index.js';
 import { Request, Response } from 'express';
@@ -36,7 +36,6 @@ export default class UserController extends Controller {
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('userId'),
         new DocumentExistsMiddleware(this.userService, 'User', 'userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar'),
